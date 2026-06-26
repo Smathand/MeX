@@ -1,0 +1,4046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>SmartPOS — Owner Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ── ROOT (Light / Dark) ── */
+        :root {
+            --bg-body: #f0f2f5;
+            --text-primary: #1e293b;
+            --card-bg: white;
+            --card-border: #eef2f6;
+            --header-bg: white;
+            --header-border: #eef2f6;
+            --stat-card-bg: white;
+            --stat-border: #e9eef3;
+            --input-bg: white;
+            --input-border: #cfdee9;
+            --input-focus: #2c6e2f;
+            --btn-primary-bg: #1f4f2b;
+            --btn-primary-hover: #0f3a1a;
+            --btn-secondary-bg: #eef2ff;
+            --btn-secondary-color: #2c3e50;
+            --btn-outline-color: #334155;
+            --btn-outline-border: #cbd5e1;
+            --btn-whatsapp: #25D366;
+            --btn-whatsapp-hover: #128C7E;
+            --btn-email: #3b82f6;
+            --btn-email-hover: #2563eb;
+            --ceo-settings-bg: #f1f5f9;
+            --table-header-bg: #f8fafc;
+            --table-border: #ecf3f8;
+            --action-icon: #6c86a3;
+            --action-edit-hover: #2c6e2f;
+            --action-delete-hover: #dc2626;
+            --empty-row-color: #6b7280;
+            --modal-bg: white;
+            --info-note: #4b5563;
+            --login-gradient-start: #0f2b1d;
+            --login-gradient-end: #1a4a2a;
+            --filter-active-bg: #2c6e2f;
+            --filter-active-text: white;
+            --plan-card-bg: #f8fafc;
+            --plan-border: #e2e8f0;
+            --plan-popular: #2c6e2f;
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --fab-bg: #1f4f2b;
+            --fab-shadow: 0 6px 20px rgba(31, 79, 43, 0.4);
+            --chat-own-msg: #2c6e2f;
+            --chat-other-msg: #eef2ff;
+            --chat-file-bg: #f0f4ff;
+            --chat-file-border: #d0ddf0;
+            --chart-grid-color: #e9eef3;
+            --chart-text-color: #1e293b;
+        }
+        body.dark {
+            --bg-body: #0a0a0a;
+            --text-primary: #e5e5e5;
+            --card-bg: #1a1a1a;
+            --card-border: #2a2a2a;
+            --header-bg: #1a1a1a;
+            --header-border: #2a2a2a;
+            --stat-card-bg: #1a1a1a;
+            --stat-border: #2a2a2a;
+            --input-bg: #0f0f0f;
+            --input-border: #333333;
+            --input-focus: #2c6e2f;
+            --btn-primary-bg: #2c6e2f;
+            --btn-primary-hover: #1f4f2b;
+            --btn-secondary-bg: #2c2c2c;
+            --btn-secondary-color: #e5e5e5;
+            --btn-outline-color: #cccccc;
+            --btn-outline-border: #444444;
+            --ceo-settings-bg: #111111;
+            --table-header-bg: #111111;
+            --table-border: #2a2a2a;
+            --action-icon: #a0a0a0;
+            --action-edit-hover: #4ade80;
+            --action-delete-hover: #f87171;
+            --empty-row-color: #a0a0a0;
+            --modal-bg: #1a1a1a;
+            --info-note: #a0a0a0;
+            --login-gradient-start: #0a0a0a;
+            --login-gradient-end: #1a1a1a;
+            --filter-active-bg: #4ade80;
+            --filter-active-text: #0a0a0a;
+            --plan-card-bg: #121212;
+            --plan-border: #2a2a2a;
+            --plan-popular: #4ade80;
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --fab-bg: #2c6e2f;
+            --fab-shadow: 0 6px 20px rgba(44, 110, 47, 0.5);
+            --chat-own-msg: #2c6e2f;
+            --chat-other-msg: #2a2a2a;
+            --chat-file-bg: #1a1a2a;
+            --chat-file-border: #333355;
+            --chart-grid-color: #2a2a2a;
+            --chart-text-color: #e5e5e5;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        body {
+            background: var(--bg-body);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        button,
+        .btn,
+        .btn-sm,
+        .login-btn,
+        .whatsapp-btn,
+        .email-btn,
+        .btn-save-email,
+        .btn-save-wa,
+        .btn-primary,
+        .btn-secondary,
+        .btn-outline,
+        .logout-btn,
+        .change-pw-btn,
+        .inline-btn,
+        #saveProfileBtn,
+        #closeModalBtn,
+        #clearSearchBtn,
+        #clearAllBtn,
+        #cancelEditBtn,
+        #submitBtn,
+        .action-icons i,
+        .profile-pic,
+        .profile-preview,
+        .fab-btn,
+        .chat-attach-btn {
+            outline: none !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        button,
+        .btn,
+        .btn-sm,
+        .login-btn,
+        .whatsapp-btn,
+        .email-btn,
+        .btn-save-email,
+        .btn-save-wa,
+        .btn-primary,
+        .btn-secondary,
+        .btn-outline,
+        .logout-btn,
+        .change-pw-btn,
+        .inline-btn,
+        #saveProfileBtn,
+        #closeModalBtn,
+        #clearSearchBtn,
+        #clearAllBtn,
+        #cancelEditBtn,
+        #submitBtn,
+        .fab-btn,
+        .chat-attach-btn {
+            border-radius: 14px !important;
+            cursor: pointer;
+        }
+        .btn-primary,
+        .login-btn,
+        #submitBtn {
+            background: var(--btn-primary-bg);
+            color: white;
+        }
+        .btn-primary:hover,
+        .login-btn:hover,
+        #submitBtn:hover {
+            background: var(--btn-primary-hover);
+        }
+        .btn-secondary,
+        #cancelEditBtn,
+        #closeModalBtn {
+            background: var(--btn-secondary-bg);
+            color: var(--btn-secondary-color);
+        }
+        .btn-outline,
+        #clearAllBtn,
+        .fab-btn {
+            background: transparent;
+            color: var(--btn-outline-color);
+            border: 1px solid var(--btn-outline-border) !important;
+        }
+        .whatsapp-btn {
+            background: var(--btn-whatsapp);
+            color: white;
+        }
+        .whatsapp-btn:hover {
+            background: var(--btn-whatsapp-hover);
+        }
+        .email-btn,
+        .btn-save-email {
+            background: var(--btn-email);
+            color: white;
+        }
+        .email-btn:hover,
+        .btn-save-email:hover {
+            background: var(--btn-email-hover);
+        }
+        .btn-save-wa {
+            background: #25D366;
+            color: white;
+        }
+        .btn-save-wa:hover {
+            background: #128C7E;
+        }
+        #clearSearchBtn {
+            background: var(--btn-email);
+            color: white;
+        }
+        .profile-pic,
+        .profile-preview {
+            border: 2px solid #2a5894 !important;
+            border-radius: 50% !important;
+            object-fit: cover;
+        }
+        input,
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-primary);
+            padding: 14px 18px;
+            font-size: 1rem;
+            border-radius: 16px;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        input:focus,
+        select:focus {
+            border-color: var(--input-focus);
+            transform: scale(1.01);
+        }
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .flex-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .card-header h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-body {
+            padding: 24px;
+        }
+        .btn {
+            padding: 14px 18px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .flex-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .btn-sm {
+            width: auto;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            border-radius: 32px;
+        }
+        .inline-btn {
+            width: auto;
+            padding: 8px 16px;
+        }
+
+        /* ── IMEI auto button ── */
+        .imei-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .imei-wrapper input {
+            flex: 1;
+        }
+        .imei-wrapper .imei-auto-btn {
+            padding: 10px 14px;
+            border-radius: 14px !important;
+            background: var(--btn-secondary-bg);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 1px solid var(--input-border) !important;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .imei-wrapper .imei-auto-btn:hover {
+            background: var(--ceo-settings-bg);
+        }
+
+        /* ── PAGE CONTAINERS ── */
+        .page-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(./Temple\ 2.jpg);
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        .page-card {
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            max-height: 98vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+        .page-card .logo-icon {
+            font-size: 80px;
+            color: #2a5894;
+            margin-bottom: 12px;
+        }
+        .page-card h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(#2a5894, #2a5894, #2a5894);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .page-card .subtitle {
+            color: var(--info-note);
+            margin-bottom: 28px;
+            font-size: 0.95rem;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .input-group input {
+            padding: 14px 18px !important;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+        .success-msg {
+            color:  #304d74;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+        .link-text {
+            color:#2a5894;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .link-text:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            margin: 20px 0 16px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        /* ── Main Login ;BACKGROUND FOR LOGIN PAGE ONLY ── */
+        #loginPage {
+            background: rgba(10, 14, 26, 0.45);
+            background-image: url(./Temple\ 1.jpeg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-blend-mode: overlay;
+        }
+        #loginPage .page-card {
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        body.dark #loginPage .page-card {
+            background: rgba(26, 26, 26, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        #loginPage .page-card .logo-icon {
+            color:  #304d74;
+            text-shadow: 0 0 30px rgba(45, 125, 58, 0.2);
+        }
+        #loginPage .page-card h2 {
+            background: linear-gradient( #304d74,  #304d74,  #304d74);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        #loginPage .page-card .subtitle {
+            color:  #304d74;
+            opacity: 0.9;
+        }
+        #loginPage .link-text {
+            color: #304d74;
+        }
+        #loginPage .login-btn {
+            background: #2a5894;
+        }
+        #loginPage .login-btn:hover {
+            background: #1a5a2a;
+        }
+        body.dark #loginPage .page-card .subtitle {
+            color: #a0b0a0;
+        }
+
+        /* ── Register Page Button ── */
+        #registerPage .login-btn {
+            background: #2a5894;
+        }
+        #registerPage .login-btn:hover {
+            background: #1e4370;
+        }
+
+        /* ── SUBSCRIPTION PLANS ── */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0 16px;
+        }
+        .plan-card {
+            background: var(--plan-card-bg);
+            border: 2px solid var(--plan-border);
+            border-radius: 20px;
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+        }
+        .plan-card:hover {
+            transform: translateY(-3px);
+        }
+        .plan-card.selected {
+            border-color: var(--plan-popular);
+            background: var(--btn-primary-bg);
+            color: white;
+        }
+        .plan-card.selected .plan-price,
+        .plan-card.selected .plan-name {
+            color: white;
+        }
+        .plan-card.selected .plan-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .plan-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .plan-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 4px 0 2px;
+            color: var(--text-primary);
+        }
+        .plan-desc {
+            font-size: 0.7rem;
+            color: var(--info-note);
+        }
+        .plan-badge {
+            display: inline-block;
+            background: var(--plan-popular);
+            color: #0a0a0a;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 30px;
+            margin-top: 4px;
+        }
+        .payment-method {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .payment-method i {
+            font-size: 2rem;
+            color: var(--info-note);
+            opacity: 0.5;
+            transition: 0.2s;
+        }
+        .payment-method i.active {
+            opacity: 1;
+            color: #2c6e2f;
+        }
+        .subscription-status {
+            background: var(--ceo-settings-bg);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+        }
+        .subscription-status .status-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        .status-badge.active {
+            background:  #304d74;
+            color: #0a0a0a;
+        }
+        .status-badge.expired {
+            background: #dc2626;
+            color: white;
+        }
+        .status-badge.pending {
+            background: #f59e0b;
+            color: #0a0a0a;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* ── POS ── */
+        .pos-content {
+            display: none;
+            padding: 24px 20px;
+            padding-bottom: 100px;
+        }
+        .pos-container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 12px 24px;
+            border-radius: 60px;
+            margin-bottom: 24px;
+            border: 1px solid var(--header-border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-container i {
+            font-size: 52px;
+            color: #2c6e2f;
+        }
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e4620, #2c6e2f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .profile-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .profile-pic {
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+        }
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--stat-card-bg);
+            border-radius: 24px;
+            padding: 18px 24px;
+            flex: 1 1 200px;
+            border: 1px solid var(--stat-border);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #5b6e8c;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f2b1d;
+        }
+        body.dark .stat-value {
+            color: #86efac;
+        }
+        .pos-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+        @media (min-width: 960px) {
+            .pos-layout {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+            .form-card {
+                flex: 0 0 400px;
+                position: sticky;
+                top: 20px;
+            }
+            .purchases-section {
+                flex: 1;
+            }
+        }
+        .total-preview {
+            background: var(--ceo-settings-bg);
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-top: 10px;
+            font-weight: 500;
+            text-align: right;
+        }
+        .search-area {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1;
+            position: relative;
+        }
+        .search-input i {
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            color: #94a3b8;
+        }
+        .search-input input {
+            padding-left: 48px !important;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th,
+        td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--table-border);
+            vertical-align: middle;
+        }
+        th {
+            background: var(--table-header-bg);
+            font-weight: 600;
+        }
+        .center-badge {
+            background: var(--btn-secondary-bg);
+            padding: 6px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .action-icons i {
+            font-size: 1.1rem;
+            margin: 0 6px;
+            cursor: pointer;
+            color: var(--action-icon);
+        }
+        .action-icons i.fa-edit:hover {
+            color: var(--action-edit-hover);
+        }
+        .action-icons i.fa-trash-alt:hover {
+            color: var(--action-delete-hover);
+        }
+        .empty-row td {
+            text-align: center;
+            padding: 40px;
+            color: var(--empty-row-color);
+        }
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .ceo-settings {
+            background: var(--ceo-settings-bg);
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+        .label-with-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .center-filter {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px;
+        }
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .filter-chip-btn {
+            background: transparent;
+            border: 1px solid var(--btn-outline-border) !important;
+            color: var(--btn-outline-color);
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            border-radius: 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-chip-btn.active-filter {
+            background: var(--filter-active-bg);
+            color: var(--filter-active-text);
+            border-color: transparent !important;
+        }
+        .filter-chip-btn:hover:not(.active-filter) {
+            background: var(--btn-secondary-bg);
+        }
+
+        /* ── MODALS ── */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-card {
+            background: var(--modal-bg);
+            border-radius: 28px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .profile-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .profile-preview {
+            width: 100px;
+            height: 100px;
+        }
+        .users-scrollable {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--table-border);
+        }
+        .button-group-center {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .section-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 8px;
+            color: var(--text-primary);
+        }
+        .modal-footer-section {
+            flex-shrink: 0;
+        }
+        .user-search-wrapper {
+            position: relative;
+            width: 200px;
+        }
+        .user-search-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+        .user-search-input {
+            width: 100%;
+            padding: 6px 12px 6px 32px !important;
+            font-size: 0.85rem !important;
+            border-radius: 20px;
+        }
+        .profile-modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .profile-modal-buttons button {
+            padding: 8px 24px;
+            font-size: 0.9rem;
+        }
+        .dark-mode-toggle {
+            background: transparent;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 30px !important;
+        }
+        .dark-mode-toggle:hover {
+            background: var(--btn-secondary-bg);
+        }
+        .logout-btn,
+        .change-pw-btn {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            border-radius: 30px !important;
+        }
+        .logout-btn:hover,
+        .change-pw-btn:hover {
+            background: var(--btn-secondary-bg);
+        }
+        .chat-toggle {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 6px 10px;
+            font-size: 1.2rem;
+            border-radius: 30px !important;
+            cursor: pointer;
+            position: relative;
+        }
+        .chat-toggle:hover {
+            background: var(--btn-secondary-bg);
+        }
+        .chat-toggle .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* ── CHART CARD ── */
+        .chart-card {
+            margin-bottom: 28px;
+        }
+        .chart-card .card-body {
+            padding: 16px 20px;
+        }
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* ── CHAT MODAL ── */
+        .chat-modal .modal-card {
+            max-width: 800px;
+            height: 90vh;
+            max-height: 90vh;
+            padding: 0;
+            overflow: hidden;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--table-border);
+            flex-shrink: 0;
+        }
+        .chat-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .chat-contacts {
+            width: 260px;
+            border-right: 1px solid var(--table-border);
+            overflow-y: auto;
+            flex-shrink: 0;
+            padding: 8px 0;
+        }
+        .chat-contacts .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 6px;
+            gap: 12px;
+        }
+        .chat-contacts .contact-item:hover {
+            background: var(--ceo-settings-bg);
+        }
+        .chat-contacts .contact-item.active {
+            background: var(--btn-primary-bg);
+            color: white;
+        }
+        .chat-contacts .contact-item .contact-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--btn-primary-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .chat-contacts .contact-item .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .chat-contacts .contact-item .contact-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .chat-contacts .contact-item .contact-last {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-contacts .contact-item .contact-unread {
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            min-width: 20px;
+            height: 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+        .chat-contacts .contact-item.active .contact-unread {
+            background: white;
+            color: #dc2626;
+        }
+        .chat-messages-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-messages-area .no-chat-selected {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--empty-row-color);
+            font-size: 0.95rem;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-messages-area .no-chat-selected i {
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .chat-messages .msg-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            word-break: break-word;
+            font-size: 0.9rem;
+            position: relative;
+        }
+        .chat-messages .msg-bubble.own {
+            align-self: flex-end;
+            background: var(--chat-own-msg);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-messages .msg-bubble.other {
+            align-self: flex-start;
+            background: var(--chat-other-msg);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-messages .msg-bubble .msg-time {
+            font-size: 0.6rem;
+            opacity: 0.6;
+            margin-top: 4px;
+            display: block;
+        }
+        .chat-messages .msg-bubble.own .msg-time {
+            text-align: right;
+        }
+
+        /* ── Chat file attachments ── */
+        .chat-file-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--chat-file-bg);
+            border: 1px solid var(--chat-file-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-top: 4px;
+            max-width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chat-file-preview:hover {
+            opacity: 0.8;
+        }
+        .chat-file-preview .file-icon {
+            font-size: 1.8rem;
+            color: var(--btn-email);
+            flex-shrink: 0;
+        }
+        .chat-file-preview .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .chat-file-preview .file-name {
+            font-weight: 500;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-file-preview .file-size {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+        .chat-file-preview .file-download {
+            color: var(--btn-email);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .chat-file-preview img.thumb {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .chat-file-preview video.thumb {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            background: #000;
+        }
+
+        /* ── Chat input with attachment ── */
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--table-border);
+            flex-shrink: 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chat-input-area .input-row {
+            display: flex;
+            flex: 1;
+            gap: 8px;
+            align-items: center;
+            min-width: 200px;
+        }
+        .chat-input-area input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 24px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            min-width: 100px;
+        }
+        .chat-input-area .chat-attach-btn {
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            padding: 8px 10px;
+            border-radius: 30px !important;
+            cursor: pointer;
+            border: 1px solid var(--input-border) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .chat-input-area .chat-attach-btn:hover {
+            background: var(--btn-secondary-bg);
+        }
+        .chat-input-area .chat-attach-btn input[type="file"] {
+            display: none;
+        }
+        .chat-input-area .chat-send-btn {
+            padding: 10px 18px;
+            border-radius: 24px !important;
+            background: var(--btn-primary-bg);
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+            border: none !important;
+            cursor: pointer;
+        }
+        .chat-input-area .chat-send-btn:hover {
+            background: var(--btn-primary-hover);
+        }
+        .chat-input-area .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .chat-input-area .file-upload-indicator {
+            display: none;
+            font-size: 0.75rem;
+            color: var(--info-note);
+            padding: 4px 10px;
+            background: var(--ceo-settings-bg);
+            border-radius: 20px;
+            align-items: center;
+            gap: 6px;
+            flex-basis: 100%;
+        }
+        .chat-input-area .file-upload-indicator.show {
+            display: flex;
+        }
+        .chat-input-area .file-upload-indicator .remove-file {
+            cursor: pointer;
+            color: #dc2626;
+            font-weight: 700;
+            padding: 0 4px;
+        }
+
+        @media (max-width: 640px) {
+            .chat-contacts {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--table-border);
+                max-height: 200px;
+            }
+            .chat-body {
+                flex-direction: column;
+            }
+            .chat-modal .modal-card {
+                height: 95vh;
+                max-height: 95vh;
+                width: 95%;
+            }
+            .chat-messages .msg-bubble {
+                max-width: 90%;
+            }
+            .imei-wrapper {
+                flex-wrap: wrap;
+            }
+            .imei-wrapper .imei-auto-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .chat-input-area .input-row {
+                flex-wrap: wrap;
+            }
+            .chat-input-area input[type="text"] {
+                min-width: 80px;
+            }
+            .chat-file-preview {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ── FLOATING ACTION BUTTON ── */
+        .fab-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 900;
+        }
+        .fab-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 40px !important;
+            background: var(--fab-bg);
+            color: white;
+            font-size: 28px;
+            box-shadow: var(--fab-shadow) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none !important;
+            transition: all 0.3s ease;
+        }
+        .fab-btn:hover {
+            transform: scale(1.08);
+            background: var(--btn-primary-hover);
+        }
+        .fab-btn i {
+            margin: 0;
+        }
+
+        /* ── OWNER PANEL ── */
+        .owner-content {
+            display: none;
+            padding: 24px 20px;
+            background: var(--bg-body);
+            min-height: 100vh;
+        }
+        .owner-container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        .owner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 12px 24px;
+            border-radius: 60px;
+            margin-bottom: 24px;
+            border: 1px solid var(--header-border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .owner-header .logo-container i {
+            font-size: 52px;
+            color: #2c6e2f;
+        }
+        .owner-header .brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e4620, #2c6e2f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .owner-header .profile-pic {
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+        }
+        .owner-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .owner-stat-card {
+            background: var(--stat-card-bg);
+            border-radius: 24px;
+            padding: 18px 24px;
+            flex: 1 1 200px;
+            border: 1px solid var(--stat-border);
+        }
+        .owner-stat-card .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #5b6e8c;
+            margin-bottom: 8px;
+        }
+        .owner-stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f2b1d;
+        }
+        body.dark .owner-stat-card .stat-value {
+            color: #86efac;
+        }
+        .owner-stat-card.highlight {
+            border: 2px solid var(--plan-popular);
+            background: var(--btn-primary-bg);
+            color: white;
+        }
+        .owner-stat-card.highlight .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .owner-stat-card.highlight .stat-value {
+            color: white;
+        }
+        body.dark .owner-stat-card.highlight {
+            border-color: #4ade80;
+        }
+        .owner-table-wrap {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .owner-table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .owner-table-wrap th,
+        .owner-table-wrap td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--table-border);
+        }
+        .owner-table-wrap th {
+            background: var(--table-header-bg);
+            font-weight: 600;
+        }
+        .status-badge-small {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-badge-small.active {
+            background: #22c55e;
+            color: #0a0a0a;
+        }
+        .status-badge-small.expired {
+            background: #dc2626;
+            color: white;
+        }
+        .status-badge-small.pending {
+            background: #f59e0b;
+            color: #0a0a0a;
+        }
+
+        .form-card {
+            display: block !important;
+        }
+        .form-card .card-body {
+            padding: 20px;
+        }
+        .form-card .form-group {
+            margin-bottom: 16px;
+        }
+        .form-card .form-group label {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        .form-card .form-group input,
+        .form-card .form-group select {
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            border-radius: 14px;
+        }
+        .form-card .btn-primary {
+            padding: 14px;
+            font-size: 1rem;
+            border-radius: 30px !important;
+        }
+        @media (max-width: 640px) {
+            .form-card .card-body {
+                padding: 16px;
+            }
+        }
+
+        /* ── File preview modal ── */
+        .file-viewer-modal .modal-card {
+            max-width: 800px;
+            max-height: 90vh;
+            background: rgba(0, 0, 0, 0.85);
+            border: none;
+        }
+        .file-viewer-modal .modal-card img,
+        .file-viewer-modal .modal-card video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto;
+        }
+        .file-viewer-modal .modal-card .file-viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            padding: 8px 0 16px;
+        }
+        .file-viewer-modal .modal-card .file-viewer-header button {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px !important;
+            border: none !important;
+            cursor: pointer;
+        }
+        .file-viewer-modal .modal-card .file-viewer-header button:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .file-viewer-modal .modal-card .file-viewer-header .file-name-display {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 70%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .placeholder-icon {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 4rem;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .doc-preview {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 100%;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .doc-preview i {
+            font-size: 3rem;
+            color: var(--btn-email);
+            margin-bottom: 12px;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .doc-preview .doc-name {
+            font-weight: 600;
+            font-size: 1rem;
+            word-break: break-all;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .doc-preview .doc-size {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .doc-preview .download-link {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 24px;
+            background: var(--btn-primary-bg);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .file-viewer-modal .modal-card .file-viewer-body .doc-preview .download-link:hover {
+            background: var(--btn-primary-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE 1 – LOGIN (Amazon Forest Background)         -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="loginPage" class="page-overlay">
+        <div class="page-card fade-in">
+            <div class="logo-icon"><i class="fas fa-store"></i></div>
+            <h2>MeX</h2>
+            <p class="subtitle">Sign in to your account</p>
+            <div class="input-group">
+                <label><i class="fas fa-user"></i> Username</label>
+                <input type="text" id="loginUsername" />
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••" />
+            </div>
+            <button id="loginBtn" class="login-btn">Login <i class="fas fa-arrow-right"></i></button>
+            <div id="loginError" class="error-msg"></div>
+            <div class="divider"></div>
+            <p style="font-size:0.9rem;">
+                Don't have an account?
+                <span id="goToRegisterLink" class="link-text">Register now</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE 2 – REGISTER (simplified)                    -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="registerPage" class="page-overlay" style="display:none;">
+        <div class="page-card fade-in">
+            <div class="logo-icon"><i class="fas fa-user-plus"></i></div>
+            <h2>Create Account</h2>
+            <p class="subtitle">Register to start using MeX</p>
+            <!-- Username field removed, Store Name will be used as username -->
+            <div class="input-group">
+                <label><i class="fas fa-lock"></i> Password *</label>
+                <input type="password" id="regPassword" />
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-check-circle"></i> Confirm Password *</label>
+                <input type="password" id="regConfirmPassword" />
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-map-marker-alt"></i> Store Name *</label>
+                <input type="text" id="regCenter" />
+            </div>
+            <button id="registerBtn" class="login-btn"><i class="fas fa-user-plus"></i> Register</button>
+            <div id="registerError" class="error-msg"></div>
+            <div id="registerSuccess" class="success-msg"></div>
+            <div class="divider"></div>
+            <p style="font-size:0.9rem;">
+                Already have an account?
+                <span id="goToLoginLink" class="link-text">Sign in</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE 3 – ADMIN SUBSCRIPTION                       -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="subscriptionPage" class="page-overlay" style="display:none;">
+        <div class="page-card fade-in">
+            <div class="logo-icon"><i class="fas fa-crown"></i></div>
+            <h2>Subscribe to Continue</h2>
+            <p class="subtitle">Choose a plan – all prices in TZS</p>
+            <div id="subStatusContainer" class="subscription-status" style="display:none;">
+                <div class="flex-between">
+                    <span><i class="fas fa-info-circle"></i> Your subscription</span>
+                    <span id="subStatusBadge" class="status-badge">—</span>
+                </div>
+                <div id="subExpiryInfo" style="font-size:0.8rem;margin-top:4px;"></div>
+            </div>
+            <div class="plans-grid" id="plansGrid">
+                <div class="plan-card" data-plan="daily" data-price="1000">
+                    <div class="plan-name">Daily</div>
+                    <div class="plan-price">1,000 TZS</div>
+                    <div class="plan-desc">24h access</div>
+                </div>
+                <div class="plan-card selected" data-plan="weekly" data-price="5000">
+                    <div class="plan-name">Weekly</div>
+                    <div class="plan-price">5,000 TZS</div>
+                    <div class="plan-desc">7 days</div>
+                    <div class="plan-badge">Popular</div>
+                </div>
+                <div class="plan-card" data-plan="monthly" data-price="15000">
+                    <div class="plan-name">Monthly</div>
+                    <div class="plan-price">15,000 TZS</div>
+                    <div class="plan-desc">30 days</div>
+                </div>
+                <div class="plan-card" data-plan="yearly" data-price="150000">
+                    <div class="plan-name">Yearly</div>
+                    <div class="plan-price">150,000 TZS</div>
+                    <div class="plan-desc">365 days</div>
+                </div>
+            </div>
+            <div style="margin:8px 0 12px;">
+                <label style="font-size:0.75rem;font-weight:500;color:var(--info-note);">Payment method (simulated)</label>
+                <div class="payment-method">
+                    <i class="fas fa-credit-card active" data-method="card"></i>
+                    <i class="fas fa-mobile-alt" data-method="mpesa"></i>
+                    <i class="fas fa-university" data-method="bank"></i>
+                </div>
+            </div>
+            <button id="subscribeBtn" class="login-btn"><i class="fas fa-check-circle"></i> Pay &amp; Subscribe</button>
+            <div id="subError" class="error-msg"></div>
+            <div id="subSuccess" class="success-msg"></div>
+            <div class="divider"></div>
+            <p style="font-size:0.8rem;color:var(--info-note);">
+                <i class="fas fa-shield-alt"></i> Secure simulated payment • No real charges
+            </p>
+            <p style="font-size:0.8rem;margin-top:4px;">
+                <span id="subLogoutLink" class="link-text" style="font-size:0.8rem;">Logout</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE 4 – CENTER SUBSCRIPTION PAYMENT              -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="centerSubPage" class="page-overlay" style="display:none;">
+        <div class="page-card fade-in">
+            <div class="logo-icon"><i class="fas fa-store-alt"></i></div>
+            <h2>Activate Your Center</h2>
+            <p class="subtitle" id="centerSubInfo">Please pay to activate your center account.</p>
+            <div class="plan-card" style="border-color: var(--plan-popular); background: var(--btn-primary-bg); color: white; padding: 20px; border-radius: 20px; margin: 16px 0;">
+                <div class="plan-name" style="color: white; font-size: 1.2rem;">Plan: <span id="centerSubPlanLabel">Weekly</span></div>
+                <div class="plan-price" id="centerSubPrice" style="font-size: 2.5rem; margin: 8px 0;">5,000 TZS</div>
+                <div class="plan-desc" style="color: rgba(255,255,255,0.8);">Discounted price (45% of main account)</div>
+            </div>
+            <div style="margin:8px 0 12px;">
+                <label style="font-size:0.75rem;font-weight:500;color:var(--info-note);">Payment method (simulated)</label>
+                <div class="payment-method">
+                    <i class="fas fa-credit-card active" data-method="card"></i>
+                    <i class="fas fa-mobile-alt" data-method="mpesa"></i>
+                    <i class="fas fa-university" data-method="bank"></i>
+                </div>
+            </div>
+            <button id="centerPayBtn" class="login-btn"><i class="fas fa-check-circle"></i> Pay &amp; Activate</button>
+            <div id="centerSubError" class="error-msg"></div>
+            <div id="centerSubSuccess" class="success-msg"></div>
+            <div class="divider"></div>
+            <p style="font-size:0.8rem;color:var(--info-note);">
+                <i class="fas fa-shield-alt"></i> Secure simulated payment • No real charges
+            </p>
+            <p style="font-size:0.8rem;margin-top:4px;">
+                <span id="centerSubLogoutLink" class="link-text" style="font-size:0.8rem;">Logout</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE 5 – POS DASHBOARD                           -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="posContent" class="pos-content">
+        <div class="pos-container">
+            <div class="top-bar">
+                <div class="logo-container">
+                    <i class="fas fa-store"></i>
+                    <span class="brand-name">MeX</span>
+                </div>
+                <div class="profile-area">
+                    <button id="chatToggle" class="chat-toggle" title="Messages">
+                        <i class="fas fa-envelope"></i>
+                        <span id="chatBadge" class="badge" style="display:none;">0</span>
+                    </button>
+                    <button id="darkModeToggle" class="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+                    <img id="profileImg" class="profile-pic" src="https://ui-avatars.com/api/?background=2c6e2f&color=fff&name=User" />
+                    <span class="profile-name" id="profileName">User</span>
+                    <span id="subBadgePos" class="sub-badge"><i class="fas fa-crown"></i> <span id="subPlanLabel">Weekly</span></span>
+                    <button id="changePasswordBtn" class="change-pw-btn"><i class="fas fa-key"></i> Change PW</button>
+                    <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-card"><div class="stat-label">TOTAL REVENUE (TZS)</div><div class="stat-value" id="totalSpentAmount">TZS 0</div></div>
+                <div class="stat-card"><div class="stat-label">SALES</div><div class="stat-value" id="totalTransactions">0</div></div>
+                <div class="stat-card"><div class="stat-label">AVG. SALE (TZS)</div><div class="stat-value" id="avgPurchase">TZS 0</div></div>
+            </div>
+
+            <!-- Sales Chart Card -->
+            <div class="card chart-card">
+                <div class="card-header"><h2><i class="fas fa-chart-bar"></i> Daily Sales (Last 7 Days)</h2></div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pos-layout">
+                <div class="form-card card">
+                    <div class="card-header"><h2><i class="fas fa-cart-plus"></i> <span id="formTitle">Record Sale</span></h2></div>
+                    <div class="card-body">
+                        <form id="purchaseForm">
+                            <div class="form-group"><label><i class="fas fa-cube"></i> Product *</label><input type="text" id="itemName" required /></div>
+                            <div class="form-group"><label><i class="fas fa-user"></i> Customer</label><input type="text" id="supplier" /></div>
+                            <div class="form-group">
+                                <label><i class="fas fa-hashtag"></i> IMEI </label>
+                                <div class="imei-wrapper">
+                                    <input type="text" id="imeiInput" />
+                                    <button type="button" class="imei-auto-btn" id="imeiAutoBtn" title="Generate random IMEI"><i class="fas fa-sync"></i> Auto</button>
+                                </div>
+                            </div>
+                            <div class="form-group" id="centerFieldGroup"><label><i class="fas fa-map-marker-alt"></i> Store *</label><select id="constructionCenter" required></select></div>
+                            <div class="form-group"><label><i class="fas fa-weight-hanging"></i> Qty *</label><input type="number" id="quantity" step="0.01" min="0.01" value="1" required /></div>
+                            <div class="form-group"><label><i class="fas fa-tag"></i> Unit Price (TZS) *</label><input type="number" id="unitPrice" step="0.01" min="0.01" required /></div>
+                            <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Date *</label><input type="date" id="purchaseDate" required /></div>
+                            <div class="total-preview" id="liveTotalPreview"><i class="fas fa-calculator"></i> Total: TZS 0</div>
+                            <button type="submit" id="submitBtn" class="btn btn-primary"><i class="fas fa-save"></i> Add Sale</button>
+                            <div class="flex-btns"><button type="button" id="cancelEditBtn" class="btn btn-secondary" style="display:none;"><i class="fas fa-times"></i> Cancel Edit</button></div>
+                        </form>
+                        <hr /><div style="font-size:0.75rem;text-align:center;">Data saved locally • TZS</div>
+                    </div>
+                </div>
+                <div class="purchases-section card">
+                    <div class="card-header"><h2><i class="fas fa-clipboard-list"></i> Sales History</h2></div>
+                    <div class="card-body">
+                        <div class="ceo-settings">
+                            <span class="label-with-icon"><i class="fas fa-envelope"></i> Manager Email:</span>
+                            <input type="email" id="ceoEmailInput" />
+                            <button id="saveCeoEmailBtn" class="btn-save-email inline-btn btn-sm">Save</button>
+                        </div>
+                        <div class="ceo-settings">
+                            <span class="label-with-icon"><i class="fab fa-whatsapp"></i> WhatsApp (comma):</span>
+                            <input type="text" id="ceoWhatsappInput" value="255713381496" />
+                            <button id="saveCeoWhatsappBtn" class="btn-save-wa inline-btn btn-sm">Save</button>
+                        </div>
+                        <div id="adminOnlyPanel" style="display:none;">
+                            <div class="center-filter">
+                                <i class="fas fa-filter"></i><span style="font-weight:600;">Filter by Store:</span>
+                                <div id="filterButtonsContainer" class="filter-buttons"></div>
+                            </div>
+                            <div style="margin-bottom:20px;">
+                                <button id="manageUsersBtn" class="email-btn btn-sm"><i class="fas fa-users"></i> Manage Store Accounts</button>
+                            </div>
+                        </div>
+                        <div class="search-area">
+                            <div class="search-input"><i class="fas fa-search"></i><input type="text" id="searchInput" /></div>
+                            <button id="clearSearchBtn" class="btn-save-email btn-sm">Clear</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="purchasesTable">
+                                <thead><tr><th>Product</th><th>Customer</th><th>IMEI Number</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Date</th><th>Store</th><th>Actions</th></tr></thead>
+                                <tbody id="tableBody"><tr class="empty-row"><td colspan="9">No sales.</td></tr></tbody>
+                            </table>
+                        </div>
+                        <div class="footer-actions">
+                            <div style="display:flex;gap:8px;">
+                                <button id="whatsappReportBtn" class="btn-sm whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp Report</button>
+                                <button id="emailDailyReportBtn" class="btn-sm email-btn"><i class="fas fa-envelope"></i> Email Daily Report</button>
+                            </div>
+                            <button id="clearAllBtn" class="btn-outline btn-sm"><i class="fas fa-trash-alt"></i> Delete All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE 6 – OWNER PANEL                             -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="ownerContent" class="owner-content">
+        <div class="owner-container">
+            <div class="owner-header">
+                <div class="logo-container">
+                    <i class="fas fa-crown"></i>
+                    <span class="brand-name">MeX —Hq </span>
+                </div>
+                <div class="profile-area">
+                    <button id="chatToggleOwner" class="chat-toggle" title="Messages">
+                        <i class="fas fa-envelope"></i>
+                        <span id="chatBadgeOwner" class="badge" style="display:none;">0</span>
+                    </button>
+                    <img id="ownerProfileImg" class="profile-pic" src="https://ui-avatars.com/api/?background=2c6e2f&color=fff&name=Owner" />
+                    <span class="profile-name" id="ownerName">Owner</span>
+                    <button id="darkModeToggleOwner" class="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+                    <button id="ownerChangePwBtn" class="change-pw-btn"><i class="fas fa-key"></i> Change PW</button>
+                    <button id="ownerLogoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+            <div class="owner-stats">
+                <div class="owner-stat-card"><div class="stat-label">Total Admins</div><div class="stat-value" id="ownerTotalAdmins">0</div></div>
+                <div class="owner-stat-card"><div class="stat-label">Total Centers</div><div class="stat-value" id="ownerTotalCenters">0</div></div>
+                <div class="owner-stat-card"><div class="stat-label">Active Subscriptions</div><div class="stat-value" id="ownerActiveSubs">0</div></div>
+                <div class="owner-stat-card"><div class="stat-label">Pending Payments</div><div class="stat-value" id="ownerPendingSubs">0</div></div>
+                <div class="owner-stat-card highlight">
+                    <div class="stat-label">💰 Jumla ya Malipo</div>
+                    <div class="stat-value" id="ownerTotalRevenue">TZS 0</div>
+                </div>
+            </div>
+            <div class="owner-table-wrap">
+                <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+                    <i class="fas fa-users"></i> All Users &amp; Subscriptions
+                </h3>
+                <div style="margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;">
+                    <input type="text" id="ownerSearchInput" style="flex:1;min-width:200px;" />
+                    <button id="ownerClearSearchBtn" class="btn-save-email btn-sm">Clear</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th><th>Role</th><th>Store</th><th>Plan</th><th>Price (TZS)</th><th>Expiry</th><th>Status</th><th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ownerTableBody">
+                        <tr><td colspan="8" style="text-align:center;">No users found.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  CHAT MODAL                                       -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="chatModal" class="modal chat-modal">
+        <div class="modal-card">
+            <div class="chat-header">
+                <h3 style="display:flex;align-items:center;gap:10px;"><i class="fas fa-comments"></i> Messages</h3>
+                <button id="closeChatBtn" class="btn-secondary btn-sm" style="font-size:1.2rem;padding:4px 14px;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body">
+                <div class="chat-contacts" id="chatContacts">
+                    <div style="padding:12px 16px;color:var(--empty-row-color);font-size:0.9rem;text-align:center;">No contacts</div>
+                </div>
+                <div class="chat-messages-area">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="no-chat-selected">
+                            <i class="fas fa-comment"></i>
+                            <span>Select a contact to start chatting</span>
+                        </div>
+                    </div>
+                    <div class="chat-input-area" id="chatInputArea">
+                        <div class="input-row">
+                            <input type="text" id="chatInput" placeholder="Type a message..." />
+                            <label class="chat-attach-btn" title="Attach file (image, document, video up to 1 min)">
+                                <i class="fas fa-paperclip"></i>
+                                <input type="file" id="chatFileInput" accept="image/*,application/*,video/*" />
+                            </label>
+                            <button class="chat-send-btn" id="chatSendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+                        </div>
+                        <div class="file-upload-indicator" id="fileUploadIndicator">
+                            <span id="fileUploadName">file.pdf</span>
+                            <span class="remove-file" id="removeFileBtn">&times;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  FILE VIEWER MODAL                                -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="fileViewerModal" class="modal file-viewer-modal">
+        <div class="modal-card" style="background: rgba(0,0,0,0.9);">
+            <div class="file-viewer-header">
+                <span class="file-name-display" id="fileViewerName">File</span>
+                <button id="fileViewerCloseBtn"><i class="fas fa-times"></i> Close</button>
+            </div>
+            <div class="file-viewer-body" id="fileViewerBody">
+                <div class="placeholder-icon"><i class="fas fa-file"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PROFILE MODAL                                    -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="profileModal" class="modal">
+        <div class="modal-card">
+            <h3><i class="fas fa-user-cog"></i> Profile Settings</h3>
+            <div class="profile-upload">
+                <img id="modalProfilePreview" class="profile-preview" />
+                <label class="btn-outline btn-sm" style="cursor:pointer;">Change Photo <input type="file" id="profileUpload" accept="image/*" style="display:none;" /></label>
+            </div>
+            <div class="input-group"><label>New Password</label><input type="password" id="newPassword" placeholder="••••••" /></div>
+            <div class="input-group"><label>Confirm Password</label><input type="password" id="confirmPassword" placeholder="••••••" /></div>
+            <div class="profile-modal-buttons">
+                <button id="saveProfileBtn" class="btn-sm btn-primary">Save</button>
+                <button id="closeModalBtn" class="btn-sm btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  USERS MODAL (for admin)                          -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="usersModal" class="modal">
+        <div class="modal-card">
+            <div class="flex-between">
+                <h3><i class="fas fa-users"></i> Manage Store Users</h3>
+                <div class="user-search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="userSearchInput" class="user-search-input" />
+                </div>
+            </div>
+            <div class="users-scrollable" id="usersListContainer">
+                <div id="usersList"></div>
+            </div>
+            <div class="modal-footer-section">
+                <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--table-border);">
+                    <h4 class="section-heading">Create New Center</h4>
+                    <div class="input-group"><label>Username</label><input type="text" id="newUsername" /></div>
+                    <div class="input-group"><label>Password</label><input type="password" id="newUserPassword" placeholder="••••••" /></div>
+                    <div class="input-group"><label>Store Name</label><input type="text" id="newUserCenter" /></div>
+                    <div class="button-group-center">
+                        <button id="addUserBtn" class="btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Create Center</button>
+                    </div>
+                </div>
+                <div class="button-group-center">
+                    <button id="closeUsersModalBtn" class="btn-sm btn-secondary"><i class="fas fa-times"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  JAVASCRIPT                                       -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <script>
+        /* ───────────────────────────────────────────────────────────────
+           FRESH START
+           ─────────────────────────────────────────────────────────────── */
+        if (!localStorage.getItem('smartpos_initialized')) {
+            localStorage.clear();
+            const owner = {
+                username: 'owner',
+                password: 'owner123',
+                role: 'owner',
+                center: null,
+                photo: 'https://ui-avatars.com/api/?background=2c6e2f&color=fff&name=Owner',
+                fullName: '',
+                email: ''
+            };
+            localStorage.setItem('pos_users', JSON.stringify([owner]));
+            localStorage.setItem('smartpos_initialized', 'true');
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           UTILITY
+           ─────────────────────────────────────────────────────────────── */
+        function getLocalTodayDate() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatDateSafe(dateStr) {
+            if (!dateStr) return '';
+            const [y, m, d] = dateStr.split('-');
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[parseInt(m,10)-1]} ${parseInt(d,10)}, ${y}`;
+        }
+
+        function formatTZS(v) { return 'TZS ' + Math.round(v).toLocaleString('en-US'); }
+
+        function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.charAt(0).toUpperCase();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function generateIMEI() {
+            let imei = '35';
+            for (let i = 0; i < 13; i++) imei += Math.floor(Math.random() * 10);
+            return imei;
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           INDEXED DB – FILE STORAGE
+           ─────────────────────────────────────────────────────────────── */
+        const DB_NAME = 'chat_files_db';
+        const STORE_NAME = 'files';
+        let db = null;
+
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, 1);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    }
+                };
+                request.onsuccess = (e) => { db = e.target.result;
+                    resolve(db); };
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        function storeFile(fileId, fileData, metadata) {
+            return new Promise((resolve, reject) => {
+                if (!db) { openDB().then(() => storeFile(fileId, fileData, metadata)).then(resolve).catch(reject); return; }
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                const store = tx.objectStore(STORE_NAME);
+                const record = { id: fileId, data: fileData, ...metadata };
+                const req = store.put(record);
+                req.onsuccess = () => resolve(record);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function getFile(fileId) {
+            return new Promise((resolve, reject) => {
+                if (!db) { openDB().then(() => getFile(fileId)).then(resolve).catch(reject); return; }
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.get(fileId);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function deleteFile(fileId) {
+            return new Promise((resolve, reject) => {
+                if (!db) { openDB().then(() => deleteFile(fileId)).then(resolve).catch(reject); return; }
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.delete(fileId);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function getAllFiles() {
+            return new Promise((resolve, reject) => {
+                if (!db) { openDB().then(() => getAllFiles()).then(resolve).catch(reject); return; }
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           USERS – CRUD
+           ─────────────────────────────────────────────────────────────── */
+        function getUsers() { return JSON.parse(localStorage.getItem('pos_users')) || []; }
+
+        function saveUsers(users) { localStorage.setItem('pos_users', JSON.stringify(users)); }
+
+        function findUser(username) { return getUsers().find(u => u.username === username) || null; }
+
+        function addUserAccount(username, password, center, fullName = '', email = '', role = 'admin', createdBy = null) {
+            const users = getUsers();
+            if (users.find(u => u.username === username)) return false;
+            if (!['admin', 'center', 'owner'].includes(role)) role = 'admin';
+            users.push({ username, password, role, center: role === 'admin' ? null : center, photo: '', fullName, email,
+                createdBy });
+            saveUsers(users);
+            return true;
+        }
+
+        function deleteUserAccount(username) {
+            const users = getUsers();
+            const user = users.find(u => u.username === username);
+            if (!user || user.role === 'owner') return false;
+            let newUsers = users.filter(u => u.username !== username);
+            saveUsers(newUsers);
+            localStorage.removeItem(`sub_${username}`);
+            let sales = getSales();
+            sales = sales.filter(s => s.createdBy !== username && s.center !== username);
+            saveSales(sales);
+            return true;
+        }
+
+        function updateUserPassword(username, newPass) {
+            let users = getUsers();
+            const idx = users.findIndex(u => u.username === username);
+            if (idx !== -1) { users[idx].password = newPass;
+                saveUsers(users); }
+        }
+
+        function updateUserPhoto(username, photoBase64) {
+            let users = getUsers();
+            const idx = users.findIndex(u => u.username === username);
+            if (idx !== -1) { users[idx].photo = photoBase64;
+                saveUsers(users); }
+        }
+
+        function validateLogin(username, password) {
+            const user = findUser(username);
+            if (user && user.password === password) return { ...user };
+            return null;
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           SUBSCRIPTION
+           ─────────────────────────────────────────────────────────────── */
+        function getSubscription(username) {
+            if (!username) return null;
+            const key = `sub_${username}`;
+            const data = localStorage.getItem(key);
+            if (!data) return null;
+            try { return JSON.parse(data); } catch { return null; }
+        }
+
+        function setSubscription(username, plan, durationDays, price = null, status = 'active') {
+            const now = new Date();
+            const start = now.toISOString().split('T')[0];
+            const exp = new Date(now.getTime() + durationDays * 86400000).toISOString().split('T')[0];
+            if (price === null) {
+                const details = getPlanDetails(plan);
+                price = details.price;
+            }
+            const sub = { plan, startDate: start, expiryDate: exp, status, created: Date.now(), price };
+            localStorage.setItem(`sub_${username}`, JSON.stringify(sub));
+            return sub;
+        }
+
+        function isSubscriptionActive(username) {
+            if (!username) return false;
+            const sub = getSubscription(username);
+            if (!sub || sub.status !== 'active') return false;
+            const today = new Date().toISOString().split('T')[0];
+            if (sub.expiryDate < today) {
+                sub.status = 'expired';
+                localStorage.setItem(`sub_${username}`, JSON.stringify(sub));
+                return false;
+            }
+            return true;
+        }
+
+        function getPlanDetails(plan) {
+            const map = {
+                daily: { label: 'Daily', days: 1, price: 1000 },
+                weekly: { label: 'Weekly', days: 7, price: 5000 },
+                monthly: { label: 'Monthly', days: 30, price: 15000 },
+                yearly: { label: 'Yearly', days: 365, price: 150000 }
+            };
+            return map[plan] || map['weekly'];
+        }
+
+        function getRemainingDays(username) {
+            if (!username) return 0;
+            const sub = getSubscription(username);
+            if (!sub || sub.status !== 'active') return 0;
+            const today = new Date().toISOString().split('T')[0];
+            if (sub.expiryDate < today) return 0;
+            const diff = new Date(sub.expiryDate) - new Date(today);
+            return Math.ceil(diff / 86400000);
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           SALES
+           ─────────────────────────────────────────────────────────────── */
+        function getSales() { return JSON.parse(localStorage.getItem('pos_sales')) || []; }
+
+        function saveSales(sales) { localStorage.setItem('pos_sales', JSON.stringify(sales)); }
+
+        function loadSales() {
+            let sales = getSales();
+            if (sales.length === 0) {
+                const today = getLocalTodayDate();
+                sales = [
+                    { id: 1001, item: 'iPhone 15 Pro', supplier: 'John Doe', imei: '354215081234567', quantity: 2,
+                        unitPrice: 2500000, date: '2025-03-10', total: 5000000, center: 'Main Store - Arusha',
+                        createdBy: 'admin' },
+                    { id: 1002, item: 'Samsung Galaxy S24', supplier: 'Jane Smith', imei: '351756112345678', quantity: 1,
+                        unitPrice: 1800000, date: '2025-03-12', total: 1800000, center: 'Downtown Store', createdBy: 'admin' },
+                    { id: 1003, item: 'Wireless Headphones', supplier: 'Alex Kim', imei: '', quantity: 5, unitPrice: 120000,
+                        date: '2025-03-14', total: 600000, center: 'Main Store - Arusha', createdBy: 'admin' }
+                ];
+                saveSales(sales);
+            }
+            return sales;
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           MESSAGES (Chat System)
+           ─────────────────────────────────────────────────────────────── */
+        function getMessages() { return JSON.parse(localStorage.getItem('pos_messages')) || []; }
+
+        function saveMessages(msgs) { localStorage.setItem('pos_messages', JSON.stringify(msgs)); }
+
+        function sendMessage(from, to, text, fileId = null, fileType = null) {
+            const msgs = getMessages();
+            msgs.push({
+                id: Date.now() + Math.random() * 1000,
+                from: from,
+                to: to,
+                text: text || '',
+                fileId: fileId,
+                fileType: fileType,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+            saveMessages(msgs);
+            return msgs;
+        }
+
+        function getUnreadCount(username) {
+            const msgs = getMessages();
+            return msgs.filter(m => m.to === username && !m.read).length;
+        }
+
+        function getConversations(username) {
+            const msgs = getMessages();
+            const contacts = new Map();
+            const allUsers = getUsers();
+            msgs.forEach(m => {
+                if (m.from === username && m.to !== username) {
+                    if (!contacts.has(m.to)) contacts.set(m.to, { unread: 0, lastMsg: m });
+                } else if (m.to === username && m.from !== username) {
+                    const unread = !m.read ? 1 : 0;
+                    if (!contacts.has(m.from)) contacts.set(m.from, { unread: 0, lastMsg: m });
+                    contacts.get(m.from).unread += unread;
+                }
+            });
+            allUsers.forEach(u => {
+                if (u.username !== username && !contacts.has(u.username)) {
+                    contacts.set(u.username, { unread: 0, lastMsg: null });
+                }
+            });
+            const sorted = Array.from(contacts.entries()).sort((a, b) => {
+                const timeA = a[1].lastMsg ? new Date(a[1].lastMsg.timestamp).getTime() : 0;
+                const timeB = b[1].lastMsg ? new Date(b[1].lastMsg.timestamp).getTime() : 0;
+                return timeB - timeA;
+            });
+            return sorted;
+        }
+
+        function getChatMessages(user1, user2) {
+            const msgs = getMessages();
+            return msgs.filter(m =>
+                (m.from === user1 && m.to === user2) ||
+                (m.from === user2 && m.to === user1)
+            ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        }
+
+        function markMessagesRead(username, other) {
+            const msgs = getMessages();
+            let updated = false;
+            msgs.forEach(m => {
+                if (m.from === other && m.to === username && !m.read) {
+                    m.read = true;
+                    updated = true;
+                }
+            });
+            if (updated) saveMessages(msgs);
+        }
+
+        function deleteMessage(id) {
+            let msgs = getMessages();
+            msgs = msgs.filter(m => m.id !== id);
+            saveMessages(msgs);
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           STATE
+           ─────────────────────────────────────────────────────────────── */
+        let currentUser = null;
+        let editingId = null;
+        let searchTerm = '';
+        let currentCenterFilter = 'all';
+        let userSearchTerm = '';
+        let sales = [];
+        let ceoEmail = '';
+        let ceoWhatsappNumbers = '255713381496';
+        let chatCurrentContact = null;
+        let pendingFile = null; // { file, fileId, name, size, type, data }
+        let salesChart = null;
+
+        /* ───────────────────────────────────────────────────────────────
+           DARK MODE – Per User Account
+           ─────────────────────────────────────────────────────────────── */
+        function getDarkModeKey(username) {
+            return `darkMode_${username}`;
+        }
+
+        function loadUserDarkMode(username) {
+            if (!username) return false;
+            const key = getDarkModeKey(username);
+            const dark = localStorage.getItem(key) === 'true';
+            return dark;
+        }
+
+        function saveUserDarkMode(username, isDark) {
+            if (!username) return;
+            const key = getDarkModeKey(username);
+            localStorage.setItem(key, isDark ? 'true' : 'false');
+        }
+
+        function applyDarkMode(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+            }
+            // Update all toggle icons
+            const toggles = document.querySelectorAll('#darkModeToggle i, #darkModeToggleOwner i');
+            toggles.forEach(t => { if (t) t.className = isDark ? 'fas fa-sun' : 'fas fa-moon'; });
+            // Update chart after dark mode change
+            setTimeout(renderSalesChart, 100);
+        }
+
+        function initDarkModeForUser(username) {
+            const isDark = loadUserDarkMode(username);
+            applyDarkMode(isDark);
+            return isDark;
+        }
+
+        function toggleDarkModeForUser(username) {
+            const isDark = !document.body.classList.contains('dark');
+            applyDarkMode(isDark);
+            saveUserDarkMode(username, isDark);
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           FILTER HELPERS
+           ─────────────────────────────────────────────────────────────── */
+        function getFilteredSales() {
+            let filtered = sales.filter(s =>
+                searchTerm === '' ||
+                s.item.toLowerCase().includes(searchTerm) ||
+                (s.supplier && s.supplier.toLowerCase().includes(searchTerm)) ||
+                (s.imei && s.imei.toLowerCase().includes(searchTerm))
+            );
+            if (currentUser.role === 'center') {
+                filtered = filtered.filter(s => s.center === currentUser.center);
+            } else if (currentUser.role === 'admin') {
+                const myCenters = getUsers().filter(u => u.role === 'center' && u.createdBy === currentUser.username).map(u => u
+                    .username);
+                filtered = filtered.filter(s => myCenters.includes(s.createdBy) || s.createdBy === currentUser.username);
+                if (currentCenterFilter !== 'all') {
+                    filtered = filtered.filter(s => s.center === currentCenterFilter);
+                }
+            }
+            return filtered.sort((a, b) => b.date.localeCompare(a.date));
+        }
+
+        function getDistinctCenters() {
+            const set = new Set();
+            const allSales = getSales();
+            allSales.forEach(s => { if (s.center && s.center.trim()) set.add(s.center); });
+            if (currentUser && currentUser.role === 'admin') {
+                getUsers().filter(u => u.role === 'center' && u.createdBy === currentUser.username).forEach(u => {
+                    if (u.center) set.add(u.center);
+                });
+            }
+            return Array.from(set).sort();
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           CHART (Bar Graph) with Conditional Colors & Comments
+           ─────────────────────────────────────────────────────────────── */
+        function renderSalesChart() {
+            const ctx = document.getElementById('salesChart');
+            if (!ctx) return;
+
+            // Get filtered sales data
+            const filtered = getFilteredSales();
+
+            // Group by date (last 7 days)
+            const today = new Date();
+            const dates = [];
+            const dailyTotals = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                dates.push(dateStr);
+                dailyTotals.push(0);
+            }
+
+            // Sum totals by date
+            filtered.forEach(sale => {
+                const saleDate = sale.date;
+                const idx = dates.indexOf(saleDate);
+                if (idx !== -1) {
+                    dailyTotals[idx] += sale.total;
+                }
+            });
+
+            // Format labels for display (e.g., "Mar 10")
+            const labels = dates.map(d => {
+                const parts = d.split('-');
+                const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(parts[1])-1];
+                return `${month} ${parseInt(parts[2])}`;
+            });
+
+            // Determine colors for each bar based on value
+            const barColors = dailyTotals.map(v => {
+                if (v < 100000) return 'rgba(255, 0, 0, 0.8)'; // Red
+                if (v >= 100000 && v < 300000) return 'rgba(205, 95, 55, 0.8)'; // Default
+                if (v >= 400000) return '#1a5a2a'; // Dark green as requested
+                return 'rgba(205, 95, 55, 0.8)'; // Default for 300k-400k
+            });
+            const borderColors = dailyTotals.map(v => {
+                if (v < 100000) return 'rgba(255, 0, 0, 1)';
+                if (v >= 100000 && v < 300000) return 'rgba(205, 95, 55, 1)';
+                if (v >= 400000) return '#1a5a2a';
+                return 'rgba(205, 95, 55, 1)';
+            });
+
+            // Determine chart colors based on theme
+            const isDark = document.body.classList.contains('dark');
+            const gridColor = isDark ? '#333' : '#e9eef3';
+            const textColor = isDark ? '#e5e5e5' : '#1e293b';
+
+            // Plugin to draw comments on bars
+            const commentPlugin = {
+                id: 'commentPlugin',
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach((dataset, datasetIndex) => {
+                        const meta = chart.getDatasetMeta(datasetIndex);
+                        if (!meta || !meta.data) return;
+                        meta.data.forEach((element, index) => {
+                            const value = dataset.data[index];
+                            let comment = '';
+                            // Only show comments for non-zero values
+                            if (value > 0) {
+                                if (value < 100000) comment = '🔴 Low sell';
+                                else if (value >= 400000) comment = '🟢 Good sell';
+                            }
+                            if (comment) {
+                                const x = element.x;
+                                const y = element.y - 8;
+                                ctx.save();
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.font = 'bold 11px Inter, sans-serif';
+                                ctx.shadowColor = 'rgba(255,255,255,0.9)';
+                                ctx.shadowBlur = 6;
+                                ctx.fillStyle = isDark ? '#eee' : '#222';
+                                ctx.fillText(comment, x, y);
+                                ctx.restore();
+                            }
+                        });
+                    });
+                }
+            };
+
+            if (salesChart) {
+                salesChart.destroy();
+            }
+
+            salesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Sales (TZS)',
+                        data: dailyTotals,
+                        backgroundColor: barColors,
+                        borderColor: borderColors,
+                        borderWidth: 1,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: textColor,
+                                font: { size: 11, family: 'Inter' }
+                            }
+                        },
+                        // Use the custom plugin for comments
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: textColor,
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    if (value >= 1000000) return (value/1000000).toFixed(1) + 'M';
+                                    if (value >= 1000) return (value/1000).toFixed(1) + 'K';
+                                    return value;
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'TZS ' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: [commentPlugin]
+            });
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           RENDER – POS
+           ─────────────────────────────────────────────────────────────── */
+        function updateStats() {
+            const f = getFilteredSales();
+            const total = f.reduce((s, p) => s + p.total, 0);
+            document.getElementById('totalSpentAmount').innerHTML = formatTZS(total);
+            document.getElementById('totalTransactions').innerText = f.length;
+            const avg = f.length ? total / f.length : 0;
+            document.getElementById('avgPurchase').innerHTML = formatTZS(avg);
+        }
+
+        function renderSalesTable() {
+            const filtered = getFilteredSales();
+            const tbody = document.getElementById('tableBody');
+            if (!tbody) return;
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr class="empty-row"><td colspan="9">No sales.</td></tr>`;
+                updateStats();
+                renderSalesChart();
+                return;
+            }
+            let html = '';
+            filtered.forEach(s => {
+                html += `<tr>
+                    <td><strong>${escapeHtml(s.item)}</strong></td>
+                    <td>${escapeHtml(s.supplier||'—')}</td>
+                    <td>${escapeHtml(s.imei||'—')}</td>
+                    <td>${s.quantity}</td>
+                    <td>${formatTZS(s.unitPrice)}</td>
+                    <td>${formatTZS(s.total)}</td>
+                    <td>${formatDateSafe(s.date)}</td>
+                    <td><span class="center-badge">${escapeHtml(s.center)}</span></td>
+                    <td class="action-icons"><i class="fas fa-edit" data-id="${s.id}"></i> <i class="fas fa-trash-alt" data-id="${s.id}"></i></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+            document.querySelectorAll('.fa-edit').forEach(icon =>
+                icon.addEventListener('click', () => startEditSale(parseInt(icon.dataset.id)))
+            );
+            document.querySelectorAll('.fa-trash-alt').forEach(icon =>
+                icon.addEventListener('click', () => deleteSaleById(parseInt(icon.dataset.id)))
+            );
+            updateStats();
+            renderSalesChart();
+        }
+
+        function renderFilterButtons() {
+            const centers = getDistinctCenters();
+            const container = document.getElementById('filterButtonsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const allBtn = document.createElement('button');
+            allBtn.className = `filter-chip-btn ${currentCenterFilter === 'all' ? 'active-filter' : ''}`;
+            allBtn.innerText = '🏪 All Stores';
+            allBtn.addEventListener('click', () => { currentCenterFilter = 'all';
+                renderFilterButtons();
+                renderSalesTable(); });
+            container.appendChild(allBtn);
+            centers.forEach(center => {
+                const btn = document.createElement('button');
+                btn.className = `filter-chip-btn ${currentCenterFilter === center ? 'active-filter' : ''}`;
+                btn.innerText = center;
+                btn.addEventListener('click', () => { currentCenterFilter = center;
+                    renderFilterButtons();
+                    renderSalesTable(); });
+                container.appendChild(btn);
+            });
+        }
+
+        function populateCenterSelects() {
+            const centers = getDistinctCenters();
+            const sel = document.getElementById('constructionCenter');
+            if (!sel) return;
+            sel.innerHTML = '';
+            if (currentUser.role === 'center') {
+                document.getElementById('centerFieldGroup').style.display = 'none';
+                sel.innerHTML = `<option value="${currentUser.center}">${currentUser.center}</option>`;
+            } else if (currentUser.role === 'admin') {
+                document.getElementById('centerFieldGroup').style.display = 'block';
+                const myCenters = getUsers().filter(u => u.role === 'center' && u.createdBy === currentUser.username);
+                if (myCenters.length === 0 && centers.length === 0) {
+                    sel.innerHTML = '<option value="">-- No centers --</option>';
+                } else {
+                    const centerNames = myCenters.map(u => u.center).filter(c => c);
+                    if (centerNames.length === 0) {
+                        sel.innerHTML = '<option value="">-- No centers --</option>';
+                    } else {
+                        centerNames.forEach(c => { const opt = document.createElement('option');
+                            opt.value = c;
+                            opt.textContent = c;
+                            sel.appendChild(opt); });
+                    }
+                }
+            }
+            renderFilterButtons();
+        }
+
+        function resetFormToAdd() {
+            editingId = null;
+            document.getElementById('formTitle').innerText = 'Record Sale';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Add Sale';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('itemName').value = '';
+            document.getElementById('supplier').value = '';
+            document.getElementById('imeiInput').value = '';
+            document.getElementById('quantity').value = '1';
+            document.getElementById('unitPrice').value = '';
+            document.getElementById('purchaseDate').value = getLocalTodayDate();
+            updateLiveTotalPreview();
+            if (currentUser.role !== 'center') {
+                const sel = document.getElementById('constructionCenter');
+                if (sel && sel.options.length) sel.value = sel.options[0]?.value || '';
+            }
+        }
+
+        function updateLiveTotalPreview() {
+            const q = parseFloat(document.getElementById('quantity')?.value) || 0;
+            const p = parseFloat(document.getElementById('unitPrice')?.value) || 0;
+            const preview = document.getElementById('liveTotalPreview');
+            if (preview) preview.innerHTML = `<i class="fas fa-calculator"></i> Total: ${formatTZS(q*p)}`;
+        }
+
+        function startEditSale(id) {
+            const s = sales.find(x => x.id === id);
+            if (!s) return;
+            editingId = id;
+            document.getElementById('itemName').value = s.item;
+            document.getElementById('supplier').value = s.supplier || '';
+            document.getElementById('imeiInput').value = s.imei || '';
+            document.getElementById('quantity').value = s.quantity;
+            document.getElementById('unitPrice').value = s.unitPrice;
+            document.getElementById('purchaseDate').value = s.date;
+            if (currentUser.role === 'admin') {
+                const sel = document.getElementById('constructionCenter');
+                if (sel) sel.value = s.center;
+            }
+            document.getElementById('formTitle').innerText = '✏️ Edit Sale';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-pen-alt"></i> Update';
+            document.getElementById('cancelEditBtn').style.display = 'flex';
+            updateLiveTotalPreview();
+        }
+
+        function deleteSaleById(id) {
+            sales = sales.filter(s => s.id !== id);
+            if (editingId === id) resetFormToAdd();
+            saveSales(sales);
+            renderSalesTable();
+        }
+
+        function deleteAllSales() {
+            if (sales.length && confirm('Delete ALL sales?')) {
+                sales = [];
+                saveSales(sales);
+                renderSalesTable();
+            }
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           FORM SUBMISSION
+           ─────────────────────────────────────────────────────────────── */
+        function submitSale(e) {
+            e.preventDefault();
+            const item = document.getElementById('itemName')?.value?.trim();
+            const center = (currentUser.role === 'center') ? currentUser.center : document.getElementById('constructionCenter')
+                ?.value;
+            if (!item) return alert('Product is required');
+            if (!center) return alert('Store is required');
+            const qty = parseFloat(document.getElementById('quantity')?.value);
+            const price = parseFloat(document.getElementById('unitPrice')?.value);
+            const date = document.getElementById('purchaseDate')?.value;
+            const imei = document.getElementById('imeiInput')?.value?.trim() || '';
+            if (isNaN(qty) || qty <= 0 || isNaN(price) || price <= 0 || !date) return alert('Valid quantity, price, date');
+            const total = qty * price;
+            const supplierVal = document.getElementById('supplier')?.value?.trim() || '';
+            const createdBy = (currentUser.role === 'center') ? currentUser.createdBy : currentUser.username;
+            if (editingId) {
+                const idx = sales.findIndex(s => s.id === editingId);
+                if (idx !== -1) sales[idx] = { ...sales[idx], item, supplier: supplierVal, imei, quantity: qty, unitPrice: price,
+                    date, total, center, createdBy };
+                editingId = null;
+            } else {
+                sales.push({ id: Date.now(), item, supplier: supplierVal, imei, quantity: qty, unitPrice: price, date, total,
+                    center, createdBy });
+            }
+            saveSales(sales);
+            resetFormToAdd();
+            populateCenterSelects();
+            renderSalesTable();
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           CENTER PAYMENT
+           ─────────────────────────────────────────────────────────────── */
+        function showCenterPaymentPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('centerSubPage').style.display = 'flex';
+            document.getElementById('posContent').style.display = 'none';
+            document.getElementById('ownerContent').style.display = 'none';
+
+            const sub = getSubscription(currentUser.username);
+            if (sub && sub.status === 'pending') {
+                const planDetails = getPlanDetails(sub.plan);
+                document.getElementById('centerSubPlanLabel').innerText = planDetails.label;
+                document.getElementById('centerSubPrice').innerText = formatTZS(sub.price);
+                document.getElementById('centerSubInfo').innerText =
+                    `Your center "${currentUser.center}" requires payment to activate.`;
+            } else {
+                showPOS();
+                return;
+            }
+            document.getElementById('centerSubError').innerText = '';
+            document.getElementById('centerSubSuccess').innerText = '';
+        }
+
+        function handleCenterPayment() {
+            const sub = getSubscription(currentUser.username);
+            if (!sub || sub.status !== 'pending') {
+                document.getElementById('centerSubError').innerText = 'No pending subscription found.';
+                return;
+            }
+            const plan = sub.plan;
+            const duration = getPlanDetails(plan).days;
+            const btn = document.getElementById('centerPayBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            setTimeout(() => {
+                setSubscription(currentUser.username, plan, duration, sub.price, 'active');
+                document.getElementById('centerSubSuccess').innerHTML =
+                    `<i class="fas fa-check-circle"></i> Payment successful! Your center is now active.`;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Pay & Activate';
+                setTimeout(() => {
+                    showPOS();
+                }, 1200);
+            }, 1500);
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           REPORTS
+           ─────────────────────────────────────────────────────────────── */
+        function getWhatsAppReportText() {
+            const filtered = getFilteredSales();
+            const total = filtered.reduce((s, p) => s + p.total, 0);
+            const last5 = filtered.slice(0, 5);
+            let details = last5.length ? '\n🔹 *Recent sales:*\n' : '';
+            last5.forEach(s => {
+                details +=
+                    `• ${s.item} | ${s.quantity} x ${formatTZS(s.unitPrice)} = ${formatTZS(s.total)} | IMEI: ${s.imei||'N/A'} | Store: ${s.center}\n`;
+            });
+            const centerLabel = (currentUser.role === 'admin') ?
+                (currentCenterFilter !== 'all' ? currentCenterFilter : 'All Stores') :
+                (currentUser.center || 'Unknown');
+            return `🏪 *SALES REPORT* 🏪\nStore: ${centerLabel}\n💰 *Total:* ${formatTZS(total)}\n📦 *Sales:* ${filtered.length}\n${details}`;
+        }
+
+        function sendWhatsAppReport() {
+            if (!sales.length) return alert('No sales');
+            const nums = ceoWhatsappNumbers.split(',').map(n => n.trim()).filter(n => n);
+            if (!nums.length) return alert('Save WhatsApp numbers');
+            const txt = encodeURIComponent(getWhatsAppReportText());
+            nums.forEach(n => {
+                let clean = n.replace(/\D/g, '');
+                if (clean.startsWith('0')) clean = '255' + clean.substring(1);
+                if (!clean.startsWith('255')) clean = '255' + clean;
+                window.open(`https://wa.me/${clean}?text=${txt}`, '_blank');
+            });
+            alert(`Opened for ${nums.length} recipient(s)`);
+        }
+
+        function sendEmailDailyReport() {
+            if (!ceoEmail) return alert('Save manager email');
+            const today = getLocalTodayDate();
+            const todaySales = getFilteredSales().filter(s => s.date === today);
+            const totalToday = todaySales.reduce((s, p) => s + p.total, 0);
+            const centerLabel = (currentUser.role === 'admin') ?
+                (currentCenterFilter !== 'all' ? currentCenterFilter : 'All Stores') :
+                (currentUser.center || 'Unknown');
+            let body =
+                `Dear Manager,\nDaily sales (${centerLabel}): ${todaySales.length} items\nTotal: ${formatTZS(totalToday)}\n\n`;
+            body += todaySales.map(s =>
+                    `- ${s.item} | ${s.quantity} x ${formatTZS(s.unitPrice)} = ${formatTZS(s.total)} | IMEI: ${s.imei||'N/A'} | Store: ${s.center}`
+                ).join('\n');
+            window.open(
+                `mailto:${encodeURIComponent(ceoEmail)}?subject=Daily Sales Report&body=${encodeURIComponent(body)}`,
+                '_blank');
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           CEO SETTINGS
+           ─────────────────────────────────────────────────────────────── */
+        function loadCeoEmail() {
+            const e = localStorage.getItem('ceo_email_address');
+            if (e) { ceoEmail = e;
+                document.getElementById('ceoEmailInput').value = e; }
+        }
+
+        function saveCeoEmail() {
+            const e = document.getElementById('ceoEmailInput').value.trim();
+            if (e && !e.includes('@')) return alert('Invalid email');
+            ceoEmail = e;
+            localStorage.setItem('ceo_email_address', e);
+            alert('Saved');
+        }
+
+        function loadCeoWhatsapp() {
+            const w = localStorage.getItem('ceo_whatsapp_numbers');
+            if (w) { ceoWhatsappNumbers = w;
+                document.getElementById('ceoWhatsappInput').value = w; } else { ceoWhatsappNumbers = '255713381496';
+                document.getElementById('ceoWhatsappInput').value = '255713381496';
+                localStorage.setItem('ceo_whatsapp_numbers', ceoWhatsappNumbers); }
+        }
+
+        function saveCeoWhatsapp() {
+            const wa = document.getElementById('ceoWhatsappInput').value.trim();
+            const parts = wa.split(',').map(p => p.trim()).filter(p => p);
+            for (const p of parts) { const d = p.replace(/\D/g, '');
+                if (d.length < 9 || d.length > 15) return alert(`Invalid: ${p}`); }
+            ceoWhatsappNumbers = wa;
+            localStorage.setItem('ceo_whatsapp_numbers', wa);
+            alert('Saved');
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           PROFILE UI
+           ─────────────────────────────────────────────────────────────── */
+        function updateProfileUI() {
+            if (!currentUser) return;
+            const pic = currentUser.photo || `https://ui-avatars.com/api/?background=2c6e2f&color=fff&name=${currentUser.username}`;
+            document.getElementById('profileImg').src = pic;
+            document.getElementById('modalProfilePreview').src = pic;
+            document.getElementById('profileName').innerText = currentUser.username;
+
+            const sub = getSubscription(currentUser.username);
+            const badge = document.getElementById('subBadgePos');
+            const label = document.getElementById('subPlanLabel');
+            if (sub && sub.status === 'active') {
+                const plan = getPlanDetails(sub.plan);
+                label.innerText = plan.label;
+                badge.style.display = 'inline-flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           USERS MODAL (for admin)
+           ─────────────────────────────────────────────────────────────── */
+        function refreshUsersList() {
+            let users = getUsers();
+            if (currentUser && currentUser.role === 'admin') {
+                users = users.filter(u => u.role === 'center' && u.createdBy === currentUser.username);
+            }
+            const term = userSearchTerm.toLowerCase();
+            if (term) users = users.filter(u =>
+                u.username.toLowerCase().includes(term) ||
+                (u.center && u.center.toLowerCase().includes(term)) ||
+                (u.fullName && u.fullName.toLowerCase().includes(term))
+            );
+            const container = document.getElementById('usersList');
+            if (!container) return;
+            container.innerHTML = '<h4 class="section-heading">Your Centers</h4>';
+            if (users.length === 0) {
+                container.innerHTML += '<div class="user-row">No centers created yet.</div>';
+                return;
+            }
+            users.forEach(u => {
+                const div = document.createElement('div');
+                div.className = 'user-row';
+                const sub = getSubscription(u.username);
+                let status = 'No sub';
+                if (sub) {
+                    if (sub.status === 'active') status = '✅ Active';
+                    else if (sub.status === 'pending') status = '⏳ Pending';
+                    else status = '❌ Expired';
+                }
+                div.innerHTML =
+                    `<span><strong>${u.username}</strong> ${u.fullName ? ' ('+u.fullName+')' : ''} 📍 ${u.center || 'N/A'} <span style="font-size:0.7rem;opacity:0.7;">${status}</span></span>
+                    <button class="btn-outline btn-sm delete-user" data-user="${u.username}">Delete</button>`;
+                container.appendChild(div);
+            });
+            document.querySelectorAll('.delete-user').forEach(btn =>
+                btn.addEventListener('click', () => {
+                    const uname = btn.getAttribute('data-user');
+                    if (confirm(`Delete center "${uname}"? This will also remove their sales.`)) {
+                        localStorage.removeItem(`sub_${uname}`);
+                        if (deleteUserAccount(uname)) {
+                            sales = getSales();
+                            refreshUsersList();
+                            populateCenterSelects();
+                            renderSalesTable();
+                        } else {
+                            alert('Cannot delete this account.');
+                        }
+                    }
+                })
+            );
+        }
+
+        function showUsersModal() {
+            userSearchTerm = '';
+            document.getElementById('userSearchInput').value = '';
+            refreshUsersList();
+            document.getElementById('usersModal').style.display = 'flex';
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           CHAT SYSTEM — with File Attachments
+           ─────────────────────────────────────────────────────────────── */
+
+        // ── File handling ──
+        function getFileTypeCategory(mimeType) {
+            if (!mimeType) return 'other';
+            if (mimeType.startsWith('image/')) return 'image';
+            if (mimeType.startsWith('video/')) return 'video';
+            if (mimeType.startsWith('application/')) return 'document';
+            if (mimeType.startsWith('text/')) return 'document';
+            return 'other';
+        }
+
+        function getFileIcon(mimeType) {
+            const cat = getFileTypeCategory(mimeType);
+            if (cat === 'image') return 'fa-image';
+            if (cat === 'video') return 'fa-video';
+            if (cat === 'document') {
+                if (mimeType.includes('pdf')) return 'fa-file-pdf';
+                if (mimeType.includes('word') || mimeType.includes('document')) return 'fa-file-word';
+                if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return 'fa-file-excel';
+                if (mimeType.includes('ppt') || mimeType.includes('presentation')) return 'fa-file-powerpoint';
+                if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('compressed'))
+                return 'fa-file-archive';
+                return 'fa-file-alt';
+            }
+            return 'fa-file';
+        }
+
+        function getFileExtension(filename) {
+            if (!filename) return '';
+            const parts = filename.split('.');
+            return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+        }
+
+        function isVideoFile(file) {
+            return file && file.type && file.type.startsWith('video/');
+        }
+
+        function validateVideoDuration(file) {
+            return new Promise((resolve, reject) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                const url = URL.createObjectURL(file);
+                video.src = url;
+                video.onloadedmetadata = () => {
+                    const duration = video.duration;
+                    URL.revokeObjectURL(url);
+                    if (duration > 60) {
+                        reject(new Error(`Video duration (${Math.round(duration)}s) exceeds 1 minute limit.`));
+                    } else {
+                        resolve(duration);
+                    }
+                };
+                video.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error('Could not read video metadata.'));
+                };
+                // Timeout fallback
+                setTimeout(() => {
+                    if (!video.duration) {
+                        URL.revokeObjectURL(url);
+                        reject(new Error('Video validation timed out.'));
+                    }
+                }, 5000);
+            });
+        }
+
+        // ── File attachment UI ──
+        function showFileIndicator(name, size) {
+            const indicator = document.getElementById('fileUploadIndicator');
+            const nameEl = document.getElementById('fileUploadName');
+            if (!indicator || !nameEl) return;
+            nameEl.textContent = `${name} (${formatFileSize(size)})`;
+            indicator.classList.add('show');
+        }
+
+        function hideFileIndicator() {
+            const indicator = document.getElementById('fileUploadIndicator');
+            if (indicator) indicator.classList.remove('show');
+            pendingFile = null;
+            document.getElementById('chatFileInput').value = '';
+        }
+
+        function handleFileSelect(file) {
+            // Validate size (max 20MB for safety)
+            const MAX_SIZE = 20 * 1024 * 1024; // 20MB
+            if (file.size > MAX_SIZE) {
+                alert(`File too large (${formatFileSize(file.size)}). Max 20MB.`);
+                return;
+            }
+
+            // If video, validate duration
+            if (isVideoFile(file)) {
+                validateVideoDuration(file).then(duration => {
+                    pendingFile = { file, fileId: 'file_' + Date.now(), name: file.name, size: file.size,
+                        type: file.type, duration: Math.round(duration) };
+                    showFileIndicator(file.name, file.size);
+                }).catch(err => {
+                    alert('❌ ' + err.message);
+                    document.getElementById('chatFileInput').value = '';
+                });
+                return;
+            }
+
+            // Image or document - accept as is
+            pendingFile = { file, fileId: 'file_' + Date.now(), name: file.name, size: file.size, type: file.type };
+            showFileIndicator(file.name, file.size);
+        }
+
+        // ── Read file as base64 ──
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ── Send message with or without file ──
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+
+            if (!text && !pendingFile) {
+                alert('Please enter a message or attach a file.');
+                return;
+            }
+            if (!chatCurrentContact) {
+                alert('Please select a contact first.');
+                return;
+            }
+            const contact = findUser(chatCurrentContact);
+            if (!contact) {
+                alert('Contact no longer exists.');
+                return;
+            }
+
+            const sendBtn = document.getElementById('chatSendBtn');
+            sendBtn.disabled = true;
+
+            try {
+                let fileId = null;
+                let fileType = null;
+                let fileMeta = null;
+
+                if (pendingFile) {
+                    // Read file as base64
+                    const data = await readFileAsBase64(pendingFile.file);
+                    // Store in IndexedDB
+                    fileId = pendingFile.fileId;
+                    fileType = getFileTypeCategory(pendingFile.type);
+                    fileMeta = {
+                        name: pendingFile.name,
+                        size: pendingFile.size,
+                        type: pendingFile.type,
+                        mimeType: pendingFile.type,
+                        duration: pendingFile.duration || null,
+                        category: fileType
+                    };
+                    await storeFile(fileId, data, fileMeta);
+                }
+
+                // Send message
+                sendMessage(currentUser.username, chatCurrentContact, text, fileId, fileType);
+
+                // Clear input
+                input.value = '';
+                hideFileIndicator();
+
+                // Refresh chat
+                renderChatMessages();
+                renderChatContacts();
+                updateChatBadge();
+
+            } catch (err) {
+                console.error('Send error:', err);
+                alert('Failed to send message: ' + err.message);
+            } finally {
+                sendBtn.disabled = false;
+                document.getElementById('chatFileInput').value = '';
+            }
+        }
+
+        // ── Render chat messages with file previews ──
+        function renderChatMessages() {
+            const container = document.getElementById('chatMessages');
+            if (!container || !chatCurrentContact) {
+                if (container) {
+                    container.innerHTML =
+                        `<div class="no-chat-selected"><i class="fas fa-comment"></i><span>Select a contact to start chatting</span></div>`;
+                }
+                return;
+            }
+            const msgs = getChatMessages(currentUser.username, chatCurrentContact);
+            if (msgs.length === 0) {
+                container.innerHTML =
+                    `<div class="no-chat-selected" style="padding:40px 0;"><i class="fas fa-comment" style="font-size:2rem;opacity:0.3;"></i><span>No messages yet. Start chatting!</span></div>`;
+                return;
+            }
+            markMessagesRead(currentUser.username, chatCurrentContact);
+            updateChatBadge();
+
+            let html = '';
+            msgs.forEach(async (m) => {
+                const isOwn = m.from === currentUser.username;
+                const time = new Date(m.timestamp).toLocaleString();
+
+                let fileHtml = '';
+                if (m.fileId) {
+                    // We'll render a placeholder and load file data asynchronously
+                    fileHtml =
+                        `<div class="chat-file-preview" data-fileid="${m.fileId}" onclick="viewFile('${m.fileId}')">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>`;
+                }
+
+                html += `<div class="msg-bubble ${isOwn ? 'own' : 'other'}">
+                    ${escapeHtml(m.text) || ''}
+                    ${fileHtml}
+                    <span class="msg-time">${time}</span>
+                </div>`;
+            });
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+
+            // Load file previews
+            container.querySelectorAll('.chat-file-preview[data-fileid]').forEach(async (el) => {
+                const fileId = el.dataset.fileid;
+                try {
+                    const record = await getFile(fileId);
+                    if (!record) {
+                        el.innerHTML = `<i class="fas fa-file"></i> <span style="font-size:0.8rem;">File not found</span>`;
+                        return;
+                    }
+                    const cat = record.category || getFileTypeCategory(record.mimeType);
+                    const icon = getFileIcon(record.mimeType);
+                    const name = record.name || 'file';
+                    const size = record.size || 0;
+
+                    if (cat === 'image') {
+                        el.innerHTML = `
+                            <img src="${record.data}" class="thumb" alt="${name}" />
+                            <div class="file-info">
+                                <div class="file-name">${escapeHtml(name)}</div>
+                                <div class="file-size">${formatFileSize(size)}</div>
+                            </div>
+                            <i class="fas fa-eye file-download"></i>
+                        `;
+                    } else if (cat === 'video') {
+                        el.innerHTML = `
+                            <video src="${record.data}" class="thumb" muted></video>
+                            <div class="file-info">
+                                <div class="file-name">${escapeHtml(name)}</div>
+                                <div class="file-size">${formatFileSize(size)} ${record.duration ? '⏱ '+record.duration+'s' : ''}</div>
+                            </div>
+                            <i class="fas fa-play file-download"></i>
+                        `;
+                    } else {
+                        el.innerHTML = `
+                            <i class="fas ${icon} file-icon"></i>
+                            <div class="file-info">
+                                <div class="file-name">${escapeHtml(name)}</div>
+                                <div class="file-size">${formatFileSize(size)}</div>
+                            </div>
+                            <i class="fas fa-download file-download"></i>
+                        `;
+                    }
+                    // Re-attach click
+                    el.onclick = () => viewFile(fileId);
+                } catch (err) {
+                    console.error('File load error:', err);
+                    el.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span style="font-size:0.8rem;">Error loading file</span>`;
+                }
+            });
+        }
+
+        // ── View file in modal ──
+        async function viewFile(fileId) {
+            const modal = document.getElementById('fileViewerModal');
+            const body = document.getElementById('fileViewerBody');
+            const nameEl = document.getElementById('fileViewerName');
+
+            try {
+                const record = await getFile(fileId);
+                if (!record) {
+                    body.innerHTML = `<div class="placeholder-icon"><i class="fas fa-exclamation-triangle"></i><p>File not found</p></div>`;
+                    modal.style.display = 'flex';
+                    return;
+                }
+
+                nameEl.textContent = record.name || 'File';
+                const cat = record.category || getFileTypeCategory(record.mimeType);
+                const data = record.data;
+
+                if (cat === 'image') {
+                    body.innerHTML = `<img src="${data}" alt="${record.name}" onclick="window.open('${data}','_blank')" style="cursor:pointer;" />`;
+                } else if (cat === 'video') {
+                    body.innerHTML =
+                        `<video controls autoplay style="max-width:100%;max-height:80vh;border-radius:12px;">
+                            <source src="${data}" type="${record.mimeType || 'video/mp4'}" />
+                            Your browser doesn't support video playback.
+                        </video>`;
+                } else {
+                    // Document or other
+                    const icon = getFileIcon(record.mimeType);
+                    body.innerHTML = `
+                        <div class="doc-preview">
+                            <i class="fas ${icon}"></i>
+                            <div class="doc-name">${escapeHtml(record.name)}</div>
+                            <div class="doc-size">${formatFileSize(record.size)}</div>
+                            <a href="${data}" download="${record.name}" class="download-link"><i class="fas fa-download"></i> Download</a>
+                            ${record.mimeType && record.mimeType.startsWith('application/pdf') ? `<br><br><embed src="${data}" type="application/pdf" width="100%" height="400px" style="border-radius:8px;" />` : ''}
+                            ${record.mimeType && record.mimeType.startsWith('text/') ? `<pre style="background:var(--card-bg);padding:16px;border-radius:8px;max-height:400px;overflow:auto;text-align:left;white-space:pre-wrap;word-break:break-all;color:var(--text-primary);">${escapeHtml(atob(data.split(',')[1] || ''))}</pre>` : ''}
+                        </div>
+                    `;
+                }
+
+                modal.style.display = 'flex';
+            } catch (err) {
+                console.error('View file error:', err);
+                body.innerHTML =
+                `<div class="placeholder-icon"><i class="fas fa-exclamation-triangle"></i><p>Error loading file</p></div>`;
+                modal.style.display = 'flex';
+            }
+        }
+
+        // ── Render chat contacts ──
+        function renderChatContacts() {
+            const container = document.getElementById('chatContacts');
+            if (!container) return;
+            const contacts = getConversations(currentUser.username);
+            if (contacts.length === 0) {
+                container.innerHTML =
+                    '<div style="padding:12px 16px;color:var(--empty-row-color);font-size:0.9rem;text-align:center;">No contacts</div>';
+                return;
+            }
+            let html = '';
+            contacts.forEach(([username, data]) => {
+                const user = findUser(username);
+                const name = user ? (user.fullName || user.username) : username;
+                const lastMsg = data.lastMsg ? data.lastMsg.text : '';
+                const unread = data.unread || 0;
+                const isActive = chatCurrentContact === username;
+                html += `<div class="contact-item ${isActive ? 'active' : ''}" data-contact="${username}">
+                    <div class="contact-avatar">${getInitials(name)}</div>
+                    <div class="contact-info">
+                        <div class="contact-name">${escapeHtml(name)}</div>
+                        <div class="contact-last">${lastMsg ? escapeHtml(lastMsg.substring(0, 40)) : 'No messages yet'}</div>
+                    </div>
+                    ${unread > 0 ? `<div class="contact-unread">${unread}</div>` : ''}
+                </div>`;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('.contact-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const contact = el.dataset.contact;
+                    chatCurrentContact = contact;
+                    renderChatContacts();
+                    renderChatMessages();
+                });
+            });
+        }
+
+        // ── Show chat modal ──
+        function showChatModal() {
+            const modal = document.getElementById('chatModal');
+            if (!modal) return;
+            chatCurrentContact = null;
+            hideFileIndicator();
+            renderChatContacts();
+            renderChatMessages();
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('chatInput').focus();
+            }, 300);
+        }
+
+        // ── Update chat badge ──
+        function updateChatBadge() {
+            if (!currentUser) return;
+            const count = getUnreadCount(currentUser.username);
+            const badge = document.getElementById('chatBadge');
+            if (badge) {
+                badge.style.display = count > 0 ? 'inline' : 'none';
+                if (count > 0) badge.innerText = count;
+            }
+            const badgeOwner = document.getElementById('chatBadgeOwner');
+            if (badgeOwner) {
+                badgeOwner.style.display = count > 0 ? 'inline' : 'none';
+                if (count > 0) badgeOwner.innerText = count;
+            }
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           OWNER PANEL
+           ─────────────────────────────────────────────────────────────── */
+        function renderOwnerDashboard() {
+            const users = getUsers();
+            document.getElementById('ownerName').innerText = currentUser.username;
+            const ownerPic = currentUser.photo || `https://ui-avatars.com/api/?background=2c6e2f&color=fff&name=Owner`;
+            document.getElementById('ownerProfileImg').src = ownerPic;
+
+            const admins = users.filter(u => u.role === 'admin');
+            const centers = users.filter(u => u.role === 'center');
+            let activeSubs = 0,
+                pendingSubs = 0;
+            let totalRevenue = 0;
+
+            users.forEach(u => {
+                const sub = getSubscription(u.username);
+                if (sub) {
+                    if (sub.status === 'active' || sub.status === 'pending') {
+                        totalRevenue += sub.price || 0;
+                    }
+                    if (sub.status === 'active') {
+                        const today = new Date().toISOString().split('T')[0];
+                        if (sub.expiryDate >= today) activeSubs++;
+                        else pendingSubs++;
+                    } else if (sub.status === 'pending') pendingSubs++;
+                }
+            });
+
+            document.getElementById('ownerTotalAdmins').innerText = admins.length;
+            document.getElementById('ownerTotalCenters').innerText = centers.length;
+            document.getElementById('ownerActiveSubs').innerText = activeSubs;
+            document.getElementById('ownerPendingSubs').innerText = pendingSubs;
+            document.getElementById('ownerTotalRevenue').innerHTML = formatTZS(totalRevenue);
+
+            const searchTerm = document.getElementById('ownerSearchInput')?.value?.toLowerCase() || '';
+            let filtered = users;
+            if (searchTerm) {
+                filtered = users.filter(u =>
+                    u.username.toLowerCase().includes(searchTerm) ||
+                    (u.center && u.center.toLowerCase().includes(searchTerm)) ||
+                    (u.fullName && u.fullName.toLowerCase().includes(searchTerm))
+                );
+            }
+            const tbody = document.getElementById('ownerTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No matching users.</td></tr>`;
+                return;
+            }
+            let html = '';
+            filtered.forEach(u => {
+                const sub = getSubscription(u.username);
+                let planLabel = '—',
+                    price = '—',
+                    expiry = '—',
+                    status = 'No sub',
+                    statusClass = 'pending';
+                if (sub) {
+                    const plan = getPlanDetails(sub.plan);
+                    planLabel = plan.label;
+                    price = formatTZS(sub.price || plan.price);
+                    expiry = formatDateSafe(sub.expiryDate);
+                    const today = new Date().toISOString().split('T')[0];
+                    if (sub.status === 'active' && sub.expiryDate >= today) {
+                        status = 'Active';
+                        statusClass = 'active';
+                    } else if (sub.status === 'pending') {
+                        status = 'Pending';
+                        statusClass = 'pending';
+                    } else {
+                        status = 'Expired';
+                        statusClass = 'expired';
+                    }
+                }
+                const roleDisplay = u.role === 'admin' ? '👑 Admin' : u.role === 'center' ? '🏪 Center' : '👤 Owner';
+                const storeDisplay = u.center || '—';
+                const isDeletable = u.role !== 'owner';
+                html += `<tr>
+                    <td><strong>${escapeHtml(u.username)}</strong></td>
+                    <td>${roleDisplay}</td>
+                    <td>${escapeHtml(storeDisplay)}</td>
+                    <td>${planLabel}</td>
+                    <td>${price}</td>
+                    <td>${expiry}</td>
+                    <td><span class="status-badge-small ${statusClass}">${status}</span></td>
+                    <td>${isDeletable ? `<button class="btn-outline btn-sm owner-delete-user" data-user="${u.username}">Delete</button>` : '—'}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+            document.querySelectorAll('.owner-delete-user').forEach(btn =>
+                btn.addEventListener('click', () => {
+                    const uname = btn.getAttribute('data-user');
+                    if (confirm(`Delete user "${uname}"? This will remove all their data.`)) {
+                        localStorage.removeItem(`sub_${uname}`);
+                        if (deleteUserAccount(uname)) {
+                            sales = getSales();
+                            renderOwnerDashboard();
+                        } else {
+                            alert('Cannot delete this account.');
+                        }
+                    }
+                })
+            );
+            updateChatBadge();
+        }
+
+        function showOwnerPanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('centerSubPage').style.display = 'none';
+            document.getElementById('posContent').style.display = 'none';
+            document.getElementById('ownerContent').style.display = 'block';
+
+            // Load dark mode for this user
+            initDarkModeForUser(currentUser.username);
+
+            const darkToggle = document.getElementById('darkModeToggleOwner');
+            if (darkToggle) {
+                darkToggle.addEventListener('click', function() {
+                    toggleDarkModeForUser(currentUser.username);
+                    renderSalesChart();
+                });
+            }
+            renderOwnerDashboard();
+            const searchInput = document.getElementById('ownerSearchInput');
+            const clearBtn = document.getElementById('ownerClearSearchBtn');
+            if (searchInput) searchInput.addEventListener('input', renderOwnerDashboard);
+            if (clearBtn) clearBtn.addEventListener('click', function() {
+                if (searchInput) searchInput.value = '';
+                renderOwnerDashboard();
+            });
+            document.getElementById('ownerLogoutBtn').addEventListener('click', logout);
+            document.getElementById('ownerChangePwBtn').addEventListener('click', () => {
+                document.getElementById('profileModal').style.display = 'flex';
+            });
+            document.getElementById('ownerProfileImg').addEventListener('click', () => {
+                document.getElementById('profileModal').style.display = 'flex';
+            });
+            document.getElementById('chatToggleOwner').addEventListener('click', showChatModal);
+            updateChatBadge();
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           DARK MODE (global init)
+           ─────────────────────────────────────────────────────────────── */
+        // This function is only used for initial page load before login
+        function initGlobalDarkMode() {
+            // Check if we have a default dark mode (from previous session without user)
+            // We'll use light mode as default for unauthenticated pages
+            const defaultDark = localStorage.getItem('darkMode') === 'true';
+            if (defaultDark) {
+                document.body.classList.add('dark');
+                const toggles = document.querySelectorAll('#darkModeToggle i, #darkModeToggleOwner i');
+                toggles.forEach(t => { if (t) t.className = 'fas fa-sun'; });
+            }
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           NAVIGATION
+           ─────────────────────────────────────────────────────────────── */
+        function showPage(pageId) {
+            const pages = ['loginPage', 'registerPage', 'subscriptionPage', 'centerSubPage'];
+            pages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (id === pageId) ? 'flex' : 'none';
+            });
+        }
+
+        function showPOS() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('subscriptionPage').style.display = 'none';
+            document.getElementById('centerSubPage').style.display = 'none';
+            document.getElementById('ownerContent').style.display = 'none';
+            document.getElementById('posContent').style.display = 'block';
+
+            // Load dark mode for this user
+            initDarkModeForUser(currentUser.username);
+
+            sales = getSales();
+            populateCenterSelects();
+            renderSalesTable();
+            updateProfileUI();
+            loadCeoEmail();
+            loadCeoWhatsapp();
+            updateChatBadge();
+
+            document.getElementById('purchaseDate').value = getLocalTodayDate();
+
+            const adminPanel = document.getElementById('adminOnlyPanel');
+            if (adminPanel) {
+                adminPanel.style.display = (currentUser.role === 'admin') ? 'block' : 'none';
+            }
+
+            resetFormToAdd();
+
+            const sub = getSubscription(currentUser.username);
+            const badge = document.getElementById('subBadgePos');
+            const label = document.getElementById('subPlanLabel');
+            if (sub && sub.status === 'active') {
+                const plan = getPlanDetails(sub.plan);
+                label.innerText = plan.label;
+                badge.style.display = 'inline-flex';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            // Render chart after DOM ready
+            setTimeout(renderSalesChart, 200);
+        }
+
+        function logout() {
+            // Save dark mode before logout
+            if (currentUser) {
+                const isDark = document.body.classList.contains('dark');
+                saveUserDarkMode(currentUser.username, isDark);
+            }
+            currentUser = null;
+            chatCurrentContact = null;
+            pendingFile = null;
+            hideFileIndicator();
+            document.getElementById('posContent').style.display = 'none';
+            document.getElementById('ownerContent').style.display = 'none';
+            document.getElementById('centerSubPage').style.display = 'none';
+            document.getElementById('chatModal').style.display = 'none';
+            document.getElementById('fileViewerModal').style.display = 'none';
+            showPage('loginPage');
+            document.getElementById('loginError').innerText = '';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            // Reset to light mode for login page
+            document.body.classList.remove('dark');
+            const toggles = document.querySelectorAll('#darkModeToggle i, #darkModeToggleOwner i');
+            toggles.forEach(t => { if (t) t.className = 'fas fa-moon'; });
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           SUBSCRIPTION (admin)
+           ─────────────────────────────────────────────────────────────── */
+        let selectedPlan = 'weekly';
+
+        function renderSubscriptionPage() {
+            if (!currentUser) return;
+            const container = document.getElementById('subStatusContainer');
+            const badge = document.getElementById('subStatusBadge');
+            const expiryInfo = document.getElementById('subExpiryInfo');
+
+            const sub = getSubscription(currentUser.username);
+            if (sub) {
+                container.style.display = 'block';
+                if (sub.status === 'active') {
+                    const remaining = getRemainingDays(currentUser.username);
+                    badge.className = 'status-badge active';
+                    badge.innerText = `✅ Active (${remaining} days left)`;
+                    const plan = getPlanDetails(sub.plan);
+                    expiryInfo.innerText =
+                        `Plan: ${plan.label} (${formatTZS(sub.price)}) • Expires: ${formatDateSafe(sub.expiryDate)}`;
+                } else if (sub.status === 'pending') {
+                    badge.className = 'status-badge pending';
+                    badge.innerText = '⏳ Pending payment';
+                    expiryInfo.innerText = `Plan: ${getPlanDetails(sub.plan).label} – awaiting payment.`;
+                } else {
+                    badge.className = 'status-badge expired';
+                    badge.innerText = '⛔ Expired';
+                    expiryInfo.innerText = `Expired on ${formatDateSafe(sub.expiryDate)} — renew to continue`;
+                }
+            } else {
+                container.style.display = 'none';
+            }
+
+            document.querySelectorAll('.plan-card').forEach(el => {
+                el.classList.toggle('selected', el.dataset.plan === selectedPlan);
+            });
+            document.getElementById('subError').innerText = '';
+            document.getElementById('subSuccess').innerText = '';
+        }
+
+        function handleSubscription() {
+            if (!currentUser) return;
+            const plan = selectedPlan;
+            const details = getPlanDetails(plan);
+            if (!details) return;
+
+            const btn = document.getElementById('subscribeBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            document.getElementById('subError').innerText = '';
+            document.getElementById('subSuccess').innerText = '';
+
+            setTimeout(() => {
+                setSubscription(currentUser.username, plan, details.days, details.price, 'active');
+                document.getElementById('subSuccess').innerHTML =
+                    `<i class="fas fa-check-circle"></i> Payment successful! You now have ${details.label} access (${formatTZS(details.price)}).`;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Pay & Subscribe';
+                renderSubscriptionPage();
+                setTimeout(() => {
+                    showPOS();
+                }, 1200);
+            }, 1200);
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           BIND EVENTS
+           ─────────────────────────────────────────────────────────────── */
+        function bindEvents() {
+            const form = document.getElementById('purchaseForm');
+            if (form) form.addEventListener('submit', submitSale);
+            document.getElementById('cancelEditBtn').addEventListener('click', resetFormToAdd);
+            document.getElementById('quantity').addEventListener('input', updateLiveTotalPreview);
+            document.getElementById('unitPrice').addEventListener('input', updateLiveTotalPreview);
+
+            const imeiAutoBtn = document.getElementById('imeiAutoBtn');
+            if (imeiAutoBtn) {
+                imeiAutoBtn.addEventListener('click', function() {
+                    const imeiInput = document.getElementById('imeiInput');
+                    if (imeiInput) {
+                        imeiInput.value = generateIMEI();
+                        imeiInput.dispatchEvent(new Event('input'));
+                    }
+                });
+            }
+
+            document.getElementById('searchInput').addEventListener('input', () => {
+                searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                renderSalesTable();
+            });
+            document.getElementById('clearSearchBtn').addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                searchTerm = '';
+                renderSalesTable();
+            });
+            document.getElementById('clearAllBtn').addEventListener('click', deleteAllSales);
+            document.getElementById('whatsappReportBtn').addEventListener('click', sendWhatsAppReport);
+            document.getElementById('emailDailyReportBtn').addEventListener('click', sendEmailDailyReport);
+            document.getElementById('saveCeoEmailBtn').addEventListener('click', saveCeoEmail);
+            document.getElementById('saveCeoWhatsappBtn').addEventListener('click', saveCeoWhatsapp);
+
+            document.getElementById('changePasswordBtn').addEventListener('click', () => {
+                document.getElementById('profileModal').style.display = 'flex';
+            });
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('profileImg').addEventListener('click', () => {
+                document.getElementById('profileModal').style.display = 'flex';
+            });
+            // Dark mode toggle for POS - per user
+            document.getElementById('darkModeToggle').addEventListener('click', function() {
+                if (currentUser) {
+                    toggleDarkModeForUser(currentUser.username);
+                    renderSalesChart();
+                }
+            });
+            document.getElementById('closeModalBtn').addEventListener('click', () => {
+                document.getElementById('profileModal').style.display = 'none';
+            });
+            document.getElementById('saveProfileBtn').addEventListener('click', () => {
+                const np = document.getElementById('newPassword')?.value?.trim();
+                if (np) {
+                    const confirm = document.getElementById('confirmPassword')?.value?.trim();
+                    if (np !== confirm) return alert('Passwords mismatch');
+                    if (np.length < 4) return alert('Min 4 chars');
+                    if (currentUser) {
+                        updateUserPassword(currentUser.username, np);
+                        alert('Password changed');
+                    }
+                }
+                const fileInput = document.getElementById('profileUpload');
+                if (fileInput && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        if (currentUser) {
+                            updateUserPhoto(currentUser.username, ev.target.result);
+                            currentUser.photo = ev.target.result;
+                            updateProfileUI();
+                            if (currentUser.role === 'owner') {
+                                document.getElementById('ownerProfileImg').src = ev.target.result;
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+                document.getElementById('profileModal').style.display = 'none';
+            });
+            document.getElementById('profileUpload').addEventListener('change', function(e) {
+                if (e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        if (currentUser) {
+                            updateUserPhoto(currentUser.username, ev.target.result);
+                            currentUser.photo = ev.target.result;
+                            updateProfileUI();
+                            if (currentUser.role === 'owner') {
+                                document.getElementById('ownerProfileImg').src = ev.target.result;
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+            // ── Chat ──
+            document.getElementById('chatToggle').addEventListener('click', showChatModal);
+            document.getElementById('closeChatBtn').addEventListener('click', () => {
+                document.getElementById('chatModal').style.display = 'none';
+            });
+            document.getElementById('chatModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('chatModal')) {
+                    document.getElementById('chatModal').style.display = 'none';
+                }
+            });
+            document.getElementById('chatSendBtn').addEventListener('click', sendChatMessage);
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChatMessage();
+                }
+            });
+
+            // ── File attachment ──
+            const fileInput = document.getElementById('chatFileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        handleFileSelect(e.target.files[0]);
+                    }
+                });
+            }
+            document.getElementById('removeFileBtn').addEventListener('click', hideFileIndicator);
+
+            // ── File viewer ──
+            document.getElementById('fileViewerCloseBtn').addEventListener('click', () => {
+                document.getElementById('fileViewerModal').style.display = 'none';
+            });
+            document.getElementById('fileViewerModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('fileViewerModal')) {
+                    document.getElementById('fileViewerModal').style.display = 'none';
+                }
+            });
+
+            // ── Users Modal ──
+            const manageBtn = document.getElementById('manageUsersBtn');
+            if (manageBtn) {
+                manageBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showUsersModal();
+                });
+            }
+            document.getElementById('addUserBtn').addEventListener('click', () => {
+                const uname = document.getElementById('newUsername')?.value?.trim();
+                const pwd = document.getElementById('newUserPassword')?.value;
+                const center = document.getElementById('newUserCenter')?.value?.trim();
+                if (!uname || !pwd || !center) return alert('All fields required');
+                if (pwd.length < 4) return alert('Password min 4 chars');
+                if (addUserAccount(uname, pwd, center, '', '', 'center', currentUser.username)) {
+                    const adminSub = getSubscription(currentUser.username);
+                    if (adminSub && adminSub.status === 'active') {
+                        const adminPlan = adminSub.plan;
+                        const adminPrice = adminSub.price || getPlanDetails(adminPlan).price;
+                        const branchPrice = Math.round(adminPrice * 0.45);
+                        const planDetails = getPlanDetails(adminPlan);
+                        setSubscription(uname, adminPlan, planDetails.days, branchPrice, 'pending');
+                        alert(`Center created! ${planDetails.label} subscription at ${formatTZS(branchPrice)} (45% of main). Center manager must pay to activate.`);
+                    } else {
+                        alert('Center created but no active admin subscription. Admin must subscribe first.');
+                    }
+                    document.getElementById('newUsername').value = '';
+                    document.getElementById('newUserPassword').value = '';
+                    document.getElementById('newUserCenter').value = '';
+                    refreshUsersList();
+                    populateCenterSelects();
+                    sales = getSales();
+                    renderSalesTable();
+                } else alert('Username already exists.');
+            });
+            document.getElementById('userSearchInput').addEventListener('input', (e) => {
+                userSearchTerm = e.target.value;
+                refreshUsersList();
+            });
+            document.getElementById('closeUsersModalBtn').addEventListener('click', () => {
+                document.getElementById('usersModal').style.display = 'none';
+            });
+
+            // ── Center Payment ──
+            document.getElementById('centerPayBtn').addEventListener('click', handleCenterPayment);
+            document.getElementById('centerSubLogoutLink').addEventListener('click', logout);
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           LOGIN HANDLER
+           ─────────────────────────────────────────────────────────────── */
+        function handleLogin() {
+            const username = document.getElementById('loginUsername')?.value?.trim();
+            const password = document.getElementById('loginPassword')?.value;
+            const errorEl = document.getElementById('loginError');
+            errorEl.innerText = '';
+
+            if (!username || !password) { errorEl.innerText = 'Please enter username and password'; return; }
+
+            const user = validateLogin(username, password);
+            if (!user) { errorEl.innerText = 'Invalid credentials'; return; }
+
+            currentUser = user;
+
+            if (user.role === 'owner') {
+                showOwnerPanel();
+                return;
+            }
+
+            if (user.role === 'admin') {
+                if (!isSubscriptionActive(username)) {
+                    showPage('subscriptionPage');
+                    renderSubscriptionPage();
+                    selectedPlan = 'weekly';
+                    document.querySelectorAll('.plan-card').forEach(el => {
+                        el.classList.toggle('selected', el.dataset.plan === selectedPlan);
+                    });
+                    return;
+                }
+                showPOS();
+                bindEvents();
+                return;
+            }
+
+            if (user.role === 'center') {
+                const sub = getSubscription(username);
+                if (!sub) {
+                    showPage('centerSubPage');
+                    document.getElementById('centerSubInfo').innerText = 'No subscription record. Contact admin.';
+                    return;
+                }
+                if (sub.status === 'active') {
+                    showPOS();
+                    bindEvents();
+                    return;
+                } else if (sub.status === 'pending') {
+                    showCenterPaymentPage();
+                    return;
+                } else {
+                    showPage('centerSubPage');
+                    document.getElementById('centerSubInfo').innerText =
+                        'Subscription expired. Contact admin to renew.';
+                    return;
+                }
+            }
+
+            showPOS();
+            bindEvents();
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           REGISTER HANDLER
+           ─────────────────────────────────────────────────────────────── */
+        function handleRegister() {
+            // Username field removed, using Store Name (regCenter) as username
+            const username = document.getElementById('regCenter')?.value?.trim();
+            const password = document.getElementById('regPassword')?.value;
+            const confirm = document.getElementById('regConfirmPassword')?.value;
+            const center = document.getElementById('regCenter')?.value?.trim();
+
+            const errEl = document.getElementById('registerError');
+            const sucEl = document.getElementById('registerSuccess');
+            errEl.innerText = '';
+            sucEl.innerText = '';
+
+            if (!username) { errEl.innerText = 'Store name is required'; return; }
+            if (password.length < 4) { errEl.innerText = 'Password must be at least 4 characters'; return; }
+            if (password !== confirm) { errEl.innerText = 'Passwords do not match'; return; }
+            if (!center) { errEl.innerText = 'Store name is required'; return; }
+
+            if (findUser(username)) { errEl.innerText = 'Store name already taken. Choose another.'; return; }
+
+            const ok = addUserAccount(username, password, center, '', '', 'admin', null);
+            if (!ok) { errEl.innerText = 'Registration failed. Try again.'; return; }
+
+            sucEl.innerHTML = '<i class="fas fa-check-circle"></i> Account created! Redirecting...';
+            document.getElementById('registerBtn').disabled = true;
+
+            const newUser = findUser(username);
+            if (newUser) {
+                currentUser = newUser;
+                setTimeout(() => {
+                    document.getElementById('registerBtn').disabled = false;
+                    showPage('subscriptionPage');
+                    renderSubscriptionPage();
+                    selectedPlan = 'weekly';
+                    document.querySelectorAll('.plan-card').forEach(el => {
+                        el.classList.toggle('selected', el.dataset.plan === selectedPlan);
+                    });
+                }, 800);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('registerBtn').disabled = false;
+                    showPage('loginPage');
+                    document.getElementById('loginUsername').value = username;
+                    document.getElementById('loginError').innerText = 'Account created! Please login.';
+                }, 800);
+            }
+        }
+
+        /* ───────────────────────────────────────────────────────────────
+           APP INIT
+           ─────────────────────────────────────────────────────────────── */
+        async function initApp() {
+            // Open IndexedDB
+            try {
+                await openDB();
+            } catch (e) {
+                console.warn('IndexedDB not available, file sharing will be limited.');
+            }
+
+            initGlobalDarkMode();
+
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+            document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+
+            document.getElementById('goToRegisterLink').addEventListener('click', () => {
+                showPage('registerPage');
+                document.getElementById('registerError').innerText = '';
+                document.getElementById('registerSuccess').innerText = '';
+            });
+            document.getElementById('goToLoginLink').addEventListener('click', () => {
+                showPage('loginPage');
+                document.getElementById('registerError').innerText = '';
+                document.getElementById('registerSuccess').innerText = '';
+            });
+
+            document.getElementById('registerBtn').addEventListener('click', handleRegister);
+            document.getElementById('regConfirmPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleRegister();
+            });
+
+            document.querySelectorAll('.plan-card').forEach(el => {
+                el.addEventListener('click', () => {
+                    selectedPlan = el.dataset.plan;
+                    document.querySelectorAll('.plan-card').forEach(c => c.classList.toggle('selected', c === el));
+                    document.getElementById('subError').innerText = '';
+                    document.getElementById('subSuccess').innerText = '';
+                });
+            });
+            document.querySelectorAll('#subscriptionPage .payment-method i').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('#subscriptionPage .payment-method i').forEach(i => i.classList
+                        .remove('active'));
+                    el.classList.add('active');
+                });
+            });
+            document.querySelectorAll('#centerSubPage .payment-method i').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('#centerSubPage .payment-method i').forEach(i => i.classList
+                        .remove('active'));
+                    el.classList.add('active');
+                });
+            });
+
+            document.getElementById('subscribeBtn').addEventListener('click', handleSubscription);
+            document.getElementById('subLogoutLink').addEventListener('click', logout);
+
+            showPage('loginPage');
+            document.getElementById('posContent').style.display = 'none';
+            document.getElementById('ownerContent').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
